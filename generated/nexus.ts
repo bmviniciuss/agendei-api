@@ -84,6 +84,7 @@ export interface NexusGenFieldTypes {
   }
   Mutation: { // field return type
     loginUser: NexusGenRootTypes['LoginUserResult'] | null; // LoginUserResult
+    logoutUser: boolean | null; // Boolean
     registerStudent: NexusGenRootTypes['User'] | null; // User
   }
   Query: { // field return type
@@ -106,6 +107,7 @@ export interface NexusGenFieldTypeNames {
   }
   Mutation: { // field return type name
     loginUser: 'LoginUserResult'
+    logoutUser: 'Boolean'
     registerStudent: 'User'
   }
   Query: { // field return type name

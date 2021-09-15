@@ -21,6 +21,9 @@ type Mutation {
   """Login a user"""
   loginUser(input: LoginUserInput!): LoginUserResult
 
+  """Logout user"""
+  logoutUser: Boolean
+
   """Register a user"""
   registerStudent(input: RegisterStudentInput!): User
 }

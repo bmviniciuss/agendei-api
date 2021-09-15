@@ -1,14 +1,21 @@
 import { PrismaClient, User, UserType } from '.prisma/client'
 
-import { CreateStudentRepository, CreateStudentRepositoryDTO, LoadUserByEmailRepository, LoadUserFromIdRepository, LoginUserRepository } from '../UserRepository'
+import {
+  CreateStudentRepository,
+  CreateStudentRepositoryDTO,
+  LoadUserByEmailRepository,
+  LoadUserFromIdRepository,
+  LoginUserRepository,
+  LogoutUserRepository
+} from '../UserRepository'
 
 export class PrismaUserRepository implements
   LoadUserByEmailRepository,
   CreateStudentRepository,
   LoginUserRepository,
-  LoadUserFromIdRepository {
+  LoadUserFromIdRepository,
+  LogoutUserRepository {
   constructor (private readonly prisma: PrismaClient) { }
-
   async loadByEmail (email: string): Promise<User | null> {
     const user = await this.prisma.user.findUnique({
       where: {
@@ -46,5 +53,14 @@ export class PrismaUserRepository implements
     })
     if (!user) return null
     return user
+  }
+
+  async logout (userId: string): Promise<User> {
+    return await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        accessToken: null
+      }
+    })
   }
 }

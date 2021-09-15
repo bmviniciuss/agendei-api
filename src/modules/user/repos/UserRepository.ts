@@ -20,3 +20,7 @@ export interface LoginUserRepository {
 export interface LoadUserFromIdRepository {
   loadById(id: User['id']): Promise<User | null>
 }
+
+export interface LogoutUserRepository {
+  logout(userId: User['id']): Promise<User>
+}
