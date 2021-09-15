@@ -7,7 +7,20 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 """
 scalar DateTime
 
+input LoginUserInput {
+  email: String!
+  password: String!
+}
+
+type LoginUserResult {
+  accessToken: String!
+  user: User!
+}
+
 type Mutation {
+  """Login a user"""
+  loginUser(input: LoginUserInput!): LoginUserResult
+
   """Register a user"""
   registerStudent(input: RegisterStudentInput!): User
 }

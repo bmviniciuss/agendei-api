@@ -12,3 +12,7 @@ export type CreateStudentRepositoryDTO = {
 export interface CreateStudentRepository {
   createStudent(data: CreateStudentRepositoryDTO): Promise<User | null>
 }
+
+export interface LoginUserRepository {
+  login(userId: User['id'], accessToken: string): Promise<User>
+}
