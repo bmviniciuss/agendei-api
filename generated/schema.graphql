@@ -26,7 +26,8 @@ type Mutation {
 }
 
 type Query {
-  ok: Boolean!
+  """Get current user."""
+  me: User
 }
 
 input RegisterStudentInput {

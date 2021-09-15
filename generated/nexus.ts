@@ -87,7 +87,7 @@ export interface NexusGenFieldTypes {
     registerStudent: NexusGenRootTypes['User'] | null; // User
   }
   Query: { // field return type
-    ok: boolean; // Boolean!
+    me: NexusGenRootTypes['User'] | null; // User
   }
   User: { // field return type
     active: boolean; // Boolean!
@@ -109,7 +109,7 @@ export interface NexusGenFieldTypeNames {
     registerStudent: 'User'
   }
   Query: { // field return type name
-    ok: 'Boolean'
+    me: 'User'
   }
   User: { // field return type name
     active: 'Boolean'
