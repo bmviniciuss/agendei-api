@@ -1,13 +1,23 @@
-import express from 'express'
+import { PrismaClient } from '@prisma/client'
+import { Express } from 'express'
 
 import env from '../config/env'
+import { makeExpressApp } from '../config/makeExpressApp'
+import { setupGraphql } from '../graphql/setupGraphql'
 
-const server = express()
+function runServer (app: Express) {
+  const PORT = env.APP_PORT
+  app.listen({ port: PORT }, () => {
+    console.log(`🚀 GraphQL server ready at http://localhost:${PORT}/graphql`)
+  })
+}
 
-server.get('/', (req, res) => {
-  return res.json({ ok: 'true ' }).status(200)
-})
+async function bootstrap () {
+  const prisma = new PrismaClient()
+  const app = makeExpressApp()
+  await setupGraphql(app, prisma)
+  runServer(app)
+}
 
-server.listen(env.APP_PORT, () => {
-  console.log(`Server listening on http://localhost:${env.APP_PORT}`)
-})
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+bootstrap().then(() => {})
