@@ -7,6 +7,8 @@ import { ApolloServer, ExpressContext } from 'apollo-server-express'
 import { Express } from 'express'
 
 import { schema } from '../../../graphql/schema'
+import { LoadUserFromTokenUseCaseFactory } from '../../../modules/user/use-cases/load-user-from-token/LoadUserFromTokenUseCaseFactory'
+import { getToken } from '../utils/getToken'
 
 export interface Context {
   prisma: PrismaClient
@@ -15,6 +17,14 @@ export interface Context {
 
 async function getContext ({ req }: ExpressContext, prisma: PrismaClient): Promise<Context> {
   const context:Context = { prisma, currentUser: null }
+  const token = getToken(req.get('Authorization'))
+  if (!token) return context
+
+  const loadUserFromTokenUseCase = new LoadUserFromTokenUseCaseFactory(prisma).build()
+  const currentUser = await loadUserFromTokenUseCase.execute({ token })
+  if (!currentUser) return context
+
+  context.currentUser = currentUser
   return context
 }
 

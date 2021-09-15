@@ -1,10 +1,21 @@
 import { PrismaClient, User, UserType } from '.prisma/client'
 
-import { CreateStudentRepository, CreateStudentRepositoryDTO, LoadUserByEmailRepository } from '../UserRepository'
+import {
+  CreateStudentRepository,
+  CreateStudentRepositoryDTO,
+  LoadUserByEmailRepository,
+  LoadUserFromIdRepository,
+  LoginUserRepository,
+  LogoutUserRepository
+} from '../UserRepository'
 
-export class PrismaUserRepository implements LoadUserByEmailRepository, CreateStudentRepository {
-  constructor (private readonly prisma: PrismaClient) {}
-
+export class PrismaUserRepository implements
+  LoadUserByEmailRepository,
+  CreateStudentRepository,
+  LoginUserRepository,
+  LoadUserFromIdRepository,
+  LogoutUserRepository {
+  constructor (private readonly prisma: PrismaClient) { }
   async loadByEmail (email: string): Promise<User | null> {
     const user = await this.prisma.user.findUnique({
       where: {
@@ -25,5 +36,31 @@ export class PrismaUserRepository implements LoadUserByEmailRepository, CreateSt
     })
     if (!student) return null
     return student
+  }
+
+  async login (userId: string, accessToken: string): Promise<User> {
+    return await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        accessToken
+      }
+    })
+  }
+
+  async loadById (id: string): Promise<User | null> {
+    const user = await this.prisma.user.findUnique({
+      where: { id }
+    })
+    if (!user) return null
+    return user
+  }
+
+  async logout (userId: string): Promise<User> {
+    return await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        accessToken: null
+      }
+    })
   }
 }

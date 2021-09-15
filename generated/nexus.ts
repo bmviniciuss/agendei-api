@@ -28,6 +28,10 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  LoginUserInput: { // input type
+    email: string; // String!
+    password: string; // String!
+  }
   RegisterStudentInput: { // input type
     email: string; // String!
     name: string; // String!
@@ -47,6 +51,10 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  LoginUserResult: { // root type
+    accessToken: string; // String!
+    user: NexusGenRootTypes['User']; // User!
+  }
   Mutation: {};
   Query: {};
   User: { // root type
@@ -70,11 +78,17 @@ export type NexusGenRootTypes = NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
+  LoginUserResult: { // field return type
+    accessToken: string; // String!
+    user: NexusGenRootTypes['User']; // User!
+  }
   Mutation: { // field return type
+    loginUser: NexusGenRootTypes['LoginUserResult'] | null; // LoginUserResult
+    logoutUser: boolean | null; // Boolean
     registerStudent: NexusGenRootTypes['User'] | null; // User
   }
   Query: { // field return type
-    ok: boolean; // Boolean!
+    me: NexusGenRootTypes['User'] | null; // User
   }
   User: { // field return type
     active: boolean; // Boolean!
@@ -87,11 +101,17 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
+  LoginUserResult: { // field return type name
+    accessToken: 'String'
+    user: 'User'
+  }
   Mutation: { // field return type name
+    loginUser: 'LoginUserResult'
+    logoutUser: 'Boolean'
     registerStudent: 'User'
   }
   Query: { // field return type name
-    ok: 'Boolean'
+    me: 'User'
   }
   User: { // field return type name
     active: 'Boolean'
@@ -105,6 +125,9 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    loginUser: { // args
+      input: NexusGenInputs['LoginUserInput']; // LoginUserInput!
+    }
     registerStudent: { // args
       input: NexusGenInputs['RegisterStudentInput']; // RegisterStudentInput!
     }
