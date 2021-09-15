@@ -4,7 +4,7 @@
   "description": "# Funcionalidades ## Admin (Funcionário da academia)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "ts-node-dev --respawn src/index.ts"
   },
   "repository": {
     "type": "git",
@@ -16,5 +16,12 @@
   "bugs": {
     "url": "https://github.com/bmviniciuss/gym-manager-api/issues"
   },
-  "homepage": "https://github.com/bmviniciuss/gym-manager-api#readme"
+  "homepage": "https://github.com/bmviniciuss/gym-manager-api#readme",
+  "dependencies": {
+    "typescript": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^16.9.1",
+    "ts-node-dev": "^1.1.8"
+  }
 }
