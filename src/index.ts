@@ -1,1 +1,1 @@
-console.log('oi')
+import './shared/infra/http/app'
