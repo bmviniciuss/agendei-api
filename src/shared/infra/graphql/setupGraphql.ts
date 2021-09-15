@@ -7,10 +7,7 @@ import { ApolloServer, ExpressContext } from 'apollo-server-express'
 import { Express } from 'express'
 
 import { schema } from '../../../graphql/schema'
-import { JwtEncrypterAdapter } from '../../../modules/cryptography/implementations'
-import { PrismaUserRepository } from '../../../modules/user/repos/implementations/PrismaUserRepository'
-import { LoadUserFromTokenUseCase } from '../../../modules/user/use-cases/load-user-from-token/LoadUserFromTokenUseCase'
-import env from '../config/env'
+import { LoadUserFromTokenUseCaseFactory } from '../../../modules/user/use-cases/load-user-from-token/LoadUserFromTokenUseCaseFactory'
 import { getToken } from '../utils/getToken'
 
 export interface Context {
@@ -23,12 +20,8 @@ async function getContext ({ req }: ExpressContext, prisma: PrismaClient): Promi
   const token = getToken(req.get('Authorization'))
   if (!token) return context
 
-  const userRepository = new PrismaUserRepository(prisma)
-  const decrypter = new JwtEncrypterAdapter(env.JWT_SECRET)
-  const currentUser = await new LoadUserFromTokenUseCase(
-    decrypter,
-    userRepository
-  ).execute({ token })
+  const loadUserFromTokenUseCase = new LoadUserFromTokenUseCaseFactory(prisma).build()
+  const currentUser = await loadUserFromTokenUseCase.execute({ token })
   if (!currentUser) return context
 
   context.currentUser = currentUser

@@ -1,10 +1,7 @@
 
 import { mutationField, inputObjectType, nonNull, arg, objectType } from 'nexus'
 
-import { BcryptHasherAdapter, JwtEncrypterAdapter } from '../../../../modules/cryptography/implementations'
-import { PrismaUserRepository } from '../../../../modules/user/repos/implementations/PrismaUserRepository'
-import { LoginUserUseCase } from '../../../../modules/user/use-cases/login-user/LoginUserUseCase'
-import env from '../../../../shared/infra/config/env'
+import { LoginUserUseCaseFactory } from '../../../../modules/user/use-cases/login-user/LoginUserUseCaseFactory'
 import { Context } from '../../../../shared/infra/graphql/setupGraphql'
 import { UserNexus } from '../types'
 
@@ -36,10 +33,7 @@ export const LoginUserMutation = mutationField('loginUser', {
   },
 
   resolve (_, { input }, context: Context) {
-    const userRepository = new PrismaUserRepository(context.prisma)
-    const hasher = new BcryptHasherAdapter()
-    const jwt = new JwtEncrypterAdapter(env.JWT_SECRET)
-    const useCase = new LoginUserUseCase(userRepository, hasher, jwt, userRepository)
-    return useCase.execute(input)
+    const loginUserUseCase = new LoginUserUseCaseFactory(context.prisma).build()
+    return loginUserUseCase.execute(input)
   }
 })

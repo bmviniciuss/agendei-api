@@ -1,8 +1,7 @@
 
 import { mutationField, inputObjectType, nonNull, arg } from 'nexus'
 
-import { PrismaUserRepository } from '../../../../modules/user/repos/implementations/PrismaUserRepository'
-import { RegisterStudentUseCase } from '../../../../modules/user/use-cases/register-student/RegisterStudentUseCase'
+import { RegisterStudentUseCaseFactory } from '../../../../modules/user/use-cases/register-student/RegisterStudentUseCaseFactory'
 import { Context } from '../../../../shared/infra/graphql/setupGraphql'
 
 export const RegisterStudentInput = inputObjectType({
@@ -24,8 +23,7 @@ export const RegisterStudentMutation = mutationField('registerStudent', {
   },
 
   resolve (_, { input }, context: Context) {
-    const userRepository = new PrismaUserRepository(context.prisma)
-    const useCase = new RegisterStudentUseCase(userRepository, userRepository)
+    const useCase = new RegisterStudentUseCaseFactory(context.prisma).build()
     return useCase.execute(input)
   }
 })

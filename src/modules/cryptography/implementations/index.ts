@@ -1,2 +1,2 @@
-export * from './BcryptHasherAdapter'
-export * from './JwtEncrypterAdapter'
+export * from './BcryptAdapter'
+export * from './JwtAdapter'
