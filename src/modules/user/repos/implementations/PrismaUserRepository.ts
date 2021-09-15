@@ -1,11 +1,12 @@
 import { PrismaClient, User, UserType } from '.prisma/client'
 
-import { CreateStudentRepository, CreateStudentRepositoryDTO, LoadUserByEmailRepository, LoginUserRepository } from '../UserRepository'
+import { CreateStudentRepository, CreateStudentRepositoryDTO, LoadUserByEmailRepository, LoadUserFromIdRepository, LoginUserRepository } from '../UserRepository'
 
 export class PrismaUserRepository implements
   LoadUserByEmailRepository,
   CreateStudentRepository,
-  LoginUserRepository {
+  LoginUserRepository,
+  LoadUserFromIdRepository {
   constructor (private readonly prisma: PrismaClient) { }
 
   async loadByEmail (email: string): Promise<User | null> {
@@ -37,5 +38,13 @@ export class PrismaUserRepository implements
         accessToken
       }
     })
+  }
+
+  async loadById (id: string): Promise<User | null> {
+    const user = await this.prisma.user.findUnique({
+      where: { id }
+    })
+    if (!user) return null
+    return user
   }
 }

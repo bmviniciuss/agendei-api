@@ -16,3 +16,7 @@ export interface CreateStudentRepository {
 export interface LoginUserRepository {
   login(userId: User['id'], accessToken: string): Promise<User>
 }
+
+export interface LoadUserFromIdRepository {
+  loadById(id: User['id']): Promise<User | null>
+}
