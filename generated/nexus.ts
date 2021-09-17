@@ -32,13 +32,16 @@ export interface NexusGenInputs {
     email: string; // String!
     password: string; // String!
   }
-  RegisterStudentInput: { // input type
+  RegisterUserInput: { // input type
     email: string; // String!
     name: string; // String!
+    password: string; // String!
+    passwordConfirmation: string; // String!
   }
 }
 
 export interface NexusGenEnums {
+  UserType: "ADMIN" | "CLIENT"
 }
 
 export interface NexusGenScalars {
@@ -63,6 +66,7 @@ export interface NexusGenObjects {
     email: string; // String!
     id: string; // ID!
     name: string; // String!
+    type: NexusGenEnums['UserType']; // UserType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
 }
@@ -75,7 +79,7 @@ export interface NexusGenUnions {
 
 export type NexusGenRootTypes = NexusGenObjects
 
-export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
+export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
   LoginUserResult: { // field return type
@@ -85,7 +89,7 @@ export interface NexusGenFieldTypes {
   Mutation: { // field return type
     loginUser: NexusGenRootTypes['LoginUserResult'] | null; // LoginUserResult
     logoutUser: boolean | null; // Boolean
-    registerStudent: NexusGenRootTypes['User'] | null; // User
+    registerUser: NexusGenRootTypes['User'] | null; // User
   }
   Query: { // field return type
     me: NexusGenRootTypes['User'] | null; // User
@@ -96,6 +100,7 @@ export interface NexusGenFieldTypes {
     email: string; // String!
     id: string; // ID!
     name: string; // String!
+    type: NexusGenEnums['UserType']; // UserType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
 }
@@ -108,7 +113,7 @@ export interface NexusGenFieldTypeNames {
   Mutation: { // field return type name
     loginUser: 'LoginUserResult'
     logoutUser: 'Boolean'
-    registerStudent: 'User'
+    registerUser: 'User'
   }
   Query: { // field return type name
     me: 'User'
@@ -119,6 +124,7 @@ export interface NexusGenFieldTypeNames {
     email: 'String'
     id: 'ID'
     name: 'String'
+    type: 'UserType'
     updatedAt: 'DateTime'
   }
 }
@@ -128,8 +134,8 @@ export interface NexusGenArgTypes {
     loginUser: { // args
       input: NexusGenInputs['LoginUserInput']; // LoginUserInput!
     }
-    registerStudent: { // args
-      input: NexusGenInputs['RegisterStudentInput']; // RegisterStudentInput!
+    registerUser: { // args
+      input: NexusGenInputs['RegisterUserInput']; // RegisterUserInput!
     }
   }
 }
@@ -144,7 +150,7 @@ export type NexusGenObjectNames = keyof NexusGenObjects;
 
 export type NexusGenInputNames = keyof NexusGenInputs;
 
-export type NexusGenEnumNames = never;
+export type NexusGenEnumNames = keyof NexusGenEnums;
 
 export type NexusGenInterfaceNames = never;
 
