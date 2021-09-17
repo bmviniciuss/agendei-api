@@ -1,3 +1,3 @@
-export * from './registerStudent'
+export * from './registerUser'
 export * from './loginUser'
 export * from './logoutUser'

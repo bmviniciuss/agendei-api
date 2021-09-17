@@ -24,8 +24,8 @@ type Mutation {
   """Logout user"""
   logoutUser: Boolean
 
-  """Register a user"""
-  registerStudent(input: RegisterStudentInput!): User
+  """Registers a user"""
+  registerUser(input: RegisterUserInput!): User
 }
 
 type Query {
@@ -33,9 +33,11 @@ type Query {
   me: User
 }
 
-input RegisterStudentInput {
+input RegisterUserInput {
   email: String!
   name: String!
+  password: String!
+  passwordConfirmation: String!
 }
 
 type User {
@@ -44,5 +46,11 @@ type User {
   email: String!
   id: ID!
   name: String!
+  type: UserType!
   updatedAt: DateTime!
+}
+
+enum UserType {
+  ADMIN
+  CLIENT
 }

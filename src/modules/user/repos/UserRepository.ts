@@ -4,13 +4,10 @@ export interface LoadUserByEmailRepository {
   loadByEmail(email: string): Promise<User | null>
 }
 
-export type CreateStudentRepositoryDTO = {
-  name: string
-  email: string
-}
+export type RegisterUserRepositoryDTO = Pick<User, 'name' | 'email' | 'password' | 'type'>
 
-export interface CreateStudentRepository {
-  createStudent(data: CreateStudentRepositoryDTO): Promise<User | null>
+export interface RegisterUserRepository {
+  register(data: RegisterUserRepositoryDTO): Promise<User | null>
 }
 
 export interface LoginUserRepository {

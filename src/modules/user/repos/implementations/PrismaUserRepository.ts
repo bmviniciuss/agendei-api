@@ -1,8 +1,8 @@
-import { PrismaClient, User, UserType } from '.prisma/client'
+import { PrismaClient, User } from '.prisma/client'
 
 import {
-  CreateStudentRepository,
-  CreateStudentRepositoryDTO,
+  RegisterUserRepository,
+  RegisterUserRepositoryDTO,
   LoadUserByEmailRepository,
   LoadUserFromIdRepository,
   LoginUserRepository,
@@ -11,7 +11,7 @@ import {
 
 export class PrismaUserRepository implements
   LoadUserByEmailRepository,
-  CreateStudentRepository,
+  RegisterUserRepository,
   LoginUserRepository,
   LoadUserFromIdRepository,
   LogoutUserRepository {
@@ -25,17 +25,18 @@ export class PrismaUserRepository implements
     return user || null
   }
 
-  async createStudent (data: CreateStudentRepositoryDTO): Promise<User | null> {
-    const student = await this.prisma.user.create({
+  async register (data: RegisterUserRepositoryDTO): Promise<User | null> {
+    const user = await this.prisma.user.create({
       data: {
         name: data.name,
         email: data.email,
-        active: false,
-        type: UserType.STUDENT
+        password: data.password,
+        active: true,
+        type: data.type
       }
     })
-    if (!student) return null
-    return student
+    if (!user) return null
+    return user
   }
 
   async login (userId: string, accessToken: string): Promise<User> {
