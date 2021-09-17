@@ -14,9 +14,9 @@ model User {
   id          String   @id @default(uuid())
   email       String   @unique
   name        String
-  password    String?
+  password    String
   accessToken String?
-  type        UserType @default(STUDENT)
+  type        UserType @default(CLIENT)
   active      Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -24,5 +24,5 @@ model User {
 
 enum UserType {
   ADMIN
-  STUDENT
+  CLIENT
 }
