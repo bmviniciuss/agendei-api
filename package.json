@@ -1,5 +1,5 @@
 {
-  "name": "gym-manager-api",
+  "name": "scheduling-app-api",
   "version": "1.0.0",
   "description": "# Funcionalidades ## Admin (Funcionário da academia)",
   "main": "index.js",
@@ -9,15 +9,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bmviniciuss/gym-manager-api.git"
+    "url": "git+https://github.com/bmviniciuss/scheduling-app-api.git"
   },
   "keywords": [],
   "author": "bmviniciuss",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/bmviniciuss/gym-manager-api/issues"
+    "url": "https://github.com/bmviniciuss/scheduling-app-api/issues"
   },
-  "homepage": "https://github.com/bmviniciuss/gym-manager-api#readme",
+  "homepage": "https://github.com/bmviniciuss/scheduling-app-api#readme",
   "dependencies": {
     "@prisma/client": "^3.0.2",
     "apollo-server-core": "^3.3.0",
