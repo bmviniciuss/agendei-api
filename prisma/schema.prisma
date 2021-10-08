@@ -21,6 +21,7 @@ model User {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   Days        Day[]
+  tickets     Ticket[]
 }
 
 enum UserType {
@@ -53,8 +54,34 @@ model Slot {
   day   Day    @relation(fields: [dayId], references: [id])
   dayId String
 
+  tickets Ticket[]
+
   active Boolean @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Ticket {
+  id     String       @id @default(uuid())
+  status TicketStatus @default(RESERVED)
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  slot   Slot   @relation(fields: [slotId], references: [id])
+  slotId String
+
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([slotId, userId])
+}
+
+enum TicketStatus {
+  RESERVED
+  USED
+  CANCELED
 }
