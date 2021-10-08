@@ -112,6 +112,7 @@ export interface NexusGenFieldTypes {
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     date: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
+    slots: NexusGenRootTypes['Slot'][] | null; // [Slot!]
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   LoginUserResult: { // field return type
@@ -155,6 +156,7 @@ export interface NexusGenFieldTypeNames {
     createdAt: 'DateTime'
     date: 'DateTime'
     id: 'ID'
+    slots: 'Slot'
     updatedAt: 'DateTime'
   }
   LoginUserResult: { // field return type name

@@ -23,6 +23,7 @@ type Day {
   createdAt: DateTime!
   date: DateTime!
   id: ID!
+  slots: [Slot!]
   updatedAt: DateTime!
 }
 
