@@ -1,2 +1,2 @@
 
-export * from './getDaySlots'
+export * from './get-day'
