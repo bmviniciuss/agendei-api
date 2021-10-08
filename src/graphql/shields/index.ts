@@ -9,6 +9,7 @@ const authenticatedAdminShield = and(isAuthenticated, isAdmin)
 export const shields = shield({
   Query: {
     '*': isAuthenticated
+    // MakeReservation: authenticatedClientShield
   },
   Mutation: {
     '*': isAuthenticated,
@@ -16,5 +17,10 @@ export const shields = shield({
     createSlot: authenticatedAdminShield,
     registerUser: allow,
     loginUser: allow
+  },
+  Slot: {
+    '*': isAuthenticated,
+    activeTicketsCount: authenticatedAdminShield,
+    tickets: authenticatedAdminShield
   }
 }, { debug: DEBUG_ENABLED, allowExternalErrors: true })

@@ -37,7 +37,14 @@ type LoginUserResult {
   user: User!
 }
 
+input MakeReservationInput {
+  slotId: ID!
+}
+
 type Mutation {
+  """Allows a CLIENT to reserve a spot on a slot"""
+  MakeReservation(input: MakeReservationInput!): Ticket
+
   """Allows a ADMIN to create a day on the system. """
   createDay(input: CreateDayInput!): Day
 
@@ -58,6 +65,9 @@ type Query {
   """."""
   GetDay(date: DateTime!): Day
 
+  """."""
+  GetSlot(id: ID!): Slot
+
   """Get current user."""
   me: User
 }
@@ -71,12 +81,30 @@ input RegisterUserInput {
 
 type Slot {
   active: Boolean!
+  activeTicketsCount: Int!
   createdAt: DateTime!
   endTime: DateTime!
   id: ID!
   startTime: DateTime!
+  tickets: [Ticket]!
   updatedAt: DateTime!
   usersLimit: Int!
+}
+
+type Ticket {
+  active: Boolean!
+  createdAt: DateTime!
+  id: ID!
+  slots: [Slot!]
+  status: TicketStatus!
+  updatedAt: DateTime!
+  user: User
+}
+
+enum TicketStatus {
+  CANCELED
+  RESERVED
+  USED
 }
 
 type User {
