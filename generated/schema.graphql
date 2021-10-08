@@ -2,10 +2,22 @@
 ### Do not make changes to this file directly
 
 
+input CreateDayInput {
+  date: DateTime!
+}
+
 """
 A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
 """
 scalar DateTime
+
+type Day {
+  active: Boolean!
+  createdAt: DateTime!
+  date: DateTime!
+  id: ID!
+  updatedAt: DateTime!
+}
 
 input LoginUserInput {
   email: String!
@@ -18,6 +30,9 @@ type LoginUserResult {
 }
 
 type Mutation {
+  """Allows a ADMIN to create a day on the system. """
+  createDay(input: CreateDayInput!): Day
+
   """Login a user"""
   loginUser(input: LoginUserInput!): LoginUserResult
 
@@ -29,6 +44,9 @@ type Mutation {
 }
 
 type Query {
+  """."""
+  getDay: Day
+
   """Get current user."""
   me: User
 }

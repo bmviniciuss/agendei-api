@@ -28,6 +28,9 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  CreateDayInput: { // input type
+    date: NexusGenScalars['DateTime']; // DateTime!
+  }
   LoginUserInput: { // input type
     email: string; // String!
     password: string; // String!
@@ -54,6 +57,13 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  Day: { // root type
+    active: boolean; // Boolean!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    date: NexusGenScalars['DateTime']; // DateTime!
+    id: string; // ID!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
   LoginUserResult: { // root type
     accessToken: string; // String!
     user: NexusGenRootTypes['User']; // User!
@@ -82,16 +92,25 @@ export type NexusGenRootTypes = NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
+  Day: { // field return type
+    active: boolean; // Boolean!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    date: NexusGenScalars['DateTime']; // DateTime!
+    id: string; // ID!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
   LoginUserResult: { // field return type
     accessToken: string; // String!
     user: NexusGenRootTypes['User']; // User!
   }
   Mutation: { // field return type
+    createDay: NexusGenRootTypes['Day'] | null; // Day
     loginUser: NexusGenRootTypes['LoginUserResult'] | null; // LoginUserResult
     logoutUser: boolean | null; // Boolean
     registerUser: NexusGenRootTypes['User'] | null; // User
   }
   Query: { // field return type
+    getDay: NexusGenRootTypes['Day'] | null; // Day
     me: NexusGenRootTypes['User'] | null; // User
   }
   User: { // field return type
@@ -106,16 +125,25 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
+  Day: { // field return type name
+    active: 'Boolean'
+    createdAt: 'DateTime'
+    date: 'DateTime'
+    id: 'ID'
+    updatedAt: 'DateTime'
+  }
   LoginUserResult: { // field return type name
     accessToken: 'String'
     user: 'User'
   }
   Mutation: { // field return type name
+    createDay: 'Day'
     loginUser: 'LoginUserResult'
     logoutUser: 'Boolean'
     registerUser: 'User'
   }
   Query: { // field return type name
+    getDay: 'Day'
     me: 'User'
   }
   User: { // field return type name
@@ -131,6 +159,9 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    createDay: { // args
+      input: NexusGenInputs['CreateDayInput']; // CreateDayInput!
+    }
     loginUser: { // args
       input: NexusGenInputs['LoginUserInput']; // LoginUserInput!
     }

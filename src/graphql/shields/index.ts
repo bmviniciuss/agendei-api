@@ -1,6 +1,6 @@
-import { allow, shield } from 'graphql-shield'
+import { allow, shield, and } from 'graphql-shield'
 
-import { isAuthenticated } from './rules/isAuthenticated'
+import { isAdmin, isAuthenticated } from './rules'
 
 const DEBUG_ENABLED = process.env.NODE_ENV === 'dev'
 
@@ -10,6 +10,7 @@ export const shields = shield({
   },
   Mutation: {
     '*': isAuthenticated,
+    createDay: and(isAuthenticated, isAdmin),
     registerUser: allow,
     loginUser: allow
   }

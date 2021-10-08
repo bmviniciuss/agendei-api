@@ -5,6 +5,7 @@ import {
 } from 'nexus'
 import path from 'path'
 
+import * as DaySchema from './schema/day'
 import * as UserSchema from './schema/user'
 
 export const DateTime = asNexusMethod(DateTimeResolver, 'date')
@@ -12,7 +13,8 @@ export const DateTime = asNexusMethod(DateTimeResolver, 'date')
 export const schema = makeSchema({
   types: [
     DateTime,
-    UserSchema
+    UserSchema,
+    DaySchema
   ],
   outputs: {
     schema: path.join(__dirname, '/../../generated/schema.graphql'),
