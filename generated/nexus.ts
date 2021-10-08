@@ -127,7 +127,7 @@ export interface NexusGenFieldTypes {
     registerUser: NexusGenRootTypes['User'] | null; // User
   }
   Query: { // field return type
-    getDay: NexusGenRootTypes['Day'] | null; // Day
+    GetDay: NexusGenRootTypes['Day'] | null; // Day
     me: NexusGenRootTypes['User'] | null; // User
   }
   Slot: { // field return type
@@ -171,7 +171,7 @@ export interface NexusGenFieldTypeNames {
     registerUser: 'User'
   }
   Query: { // field return type name
-    getDay: 'Day'
+    GetDay: 'Day'
     me: 'User'
   }
   Slot: { // field return type name
@@ -207,6 +207,11 @@ export interface NexusGenArgTypes {
     }
     registerUser: { // args
       input: NexusGenInputs['RegisterUserInput']; // RegisterUserInput!
+    }
+  }
+  Query: {
+    GetDay: { // args
+      date: NexusGenScalars['DateTime']; // DateTime!
     }
   }
 }
