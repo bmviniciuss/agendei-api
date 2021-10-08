@@ -7,7 +7,7 @@ API do projeto agendamento para a disciplina de Engenharia de Software da UFPB
 - [x] Login de usuários
 
 ## Admin
-- [ ] Criação do dia
+- [X] Criação do dia
 - [ ] Criação do cronograma do dia
 - [ ] Criação de regras de acesso
 
