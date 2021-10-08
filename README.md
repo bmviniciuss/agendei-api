@@ -1,19 +1,17 @@
-# gym-manager-api
+# scheduling-app-api
+API do projeto agendamento para a disciplina de Engenharia de Software da UFPB
 
 # Funcionalidades
-## Admin (Funcionário da academia)
+## Comum
+- [x] Registro de usuários
+- [x] Login de usuários
 
-- [x] Login de usuário admin
-- [x] Cadastrar aluno 
-- [ ] Enviar email para aluno de criação de senha.
-- [ ] Cadastro de cronograma padrão semanal
-- [ ] Geração do horário da semana
-- [ ] Adicionar créditos para um aluno
+## Admin
+- [ ] Criação do dia
+- [ ] Criação do cronograma do dia
+- [ ] Criação de regras de acesso
 
-## Aluno
-- [x] Login de usuário Aluno.
-- [ ] Criar senha de acesso;
-- [ ] Acessar o número de créditos;
-- [ ] Visualizar os horários disponíveis para o dia atual e seguinte.
-- [ ] Reserva de horário com consumo de crédito
-- [ ] Visualização de comprovante de reserva.
+## Cliente
+- [ ] Fazer agendamento para um slot
+- [ ] Ver histórico de reservas
+- [ ] Ver comprovante de reserva
