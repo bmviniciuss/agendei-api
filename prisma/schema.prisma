@@ -47,8 +47,8 @@ model Slot {
 
   usersLimit Int
 
-  start DateTime
-  end   DateTime
+  startTime DateTime
+  endTime   DateTime
 
   day   Day    @relation(fields: [dayId], references: [id])
   dayId String
