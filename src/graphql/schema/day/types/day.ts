@@ -19,7 +19,7 @@ export const DayNexus = objectType({
             dayId: root.id
           },
           orderBy: {
-            start: 'asc'
+            startTime: 'asc'
           }
         })
       }

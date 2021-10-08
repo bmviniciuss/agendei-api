@@ -33,8 +33,8 @@ export interface NexusGenInputs {
   }
   CreateSlotInput: { // input type
     dayId: string; // ID!
-    endDate: NexusGenScalars['DateTime']; // DateTime!
-    startDate: NexusGenScalars['DateTime']; // DateTime!
+    endTime: NexusGenScalars['DateTime']; // DateTime!
+    startTime: NexusGenScalars['DateTime']; // DateTime!
     usersLimit: number; // Int!
   }
   LoginUserInput: { // input type
@@ -79,9 +79,9 @@ export interface NexusGenObjects {
   Slot: { // root type
     active: boolean; // Boolean!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
-    end: NexusGenScalars['DateTime']; // DateTime!
+    endTime: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
-    start: NexusGenScalars['DateTime']; // DateTime!
+    startTime: NexusGenScalars['DateTime']; // DateTime!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     usersLimit: number; // Int!
   }
@@ -133,9 +133,9 @@ export interface NexusGenFieldTypes {
   Slot: { // field return type
     active: boolean; // Boolean!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
-    end: NexusGenScalars['DateTime']; // DateTime!
+    endTime: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
-    start: NexusGenScalars['DateTime']; // DateTime!
+    startTime: NexusGenScalars['DateTime']; // DateTime!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     usersLimit: number; // Int!
   }
@@ -177,9 +177,9 @@ export interface NexusGenFieldTypeNames {
   Slot: { // field return type name
     active: 'Boolean'
     createdAt: 'DateTime'
-    end: 'DateTime'
+    endTime: 'DateTime'
     id: 'ID'
-    start: 'DateTime'
+    startTime: 'DateTime'
     updatedAt: 'DateTime'
     usersLimit: 'Int'
   }

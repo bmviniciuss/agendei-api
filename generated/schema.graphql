@@ -8,8 +8,8 @@ input CreateDayInput {
 
 input CreateSlotInput {
   dayId: ID!
-  endDate: DateTime!
-  startDate: DateTime!
+  endTime: DateTime!
+  startTime: DateTime!
   usersLimit: Int!
 }
 
@@ -72,9 +72,9 @@ input RegisterUserInput {
 type Slot {
   active: Boolean!
   createdAt: DateTime!
-  end: DateTime!
+  endTime: DateTime!
   id: ID!
-  start: DateTime!
+  startTime: DateTime!
   updatedAt: DateTime!
   usersLimit: Int!
 }
