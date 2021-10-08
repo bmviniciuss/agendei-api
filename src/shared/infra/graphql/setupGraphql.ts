@@ -5,8 +5,10 @@ import {
 } from 'apollo-server-core'
 import { ApolloServer, ExpressContext } from 'apollo-server-express'
 import { Express } from 'express'
+import { applyMiddleware } from 'graphql-middleware'
 
 import { schema } from '../../../graphql/schema'
+import { shields } from '../../../graphql/shields'
 import { LoadUserFromTokenUseCaseFactory } from '../../../modules/user/use-cases/load-user-from-token/LoadUserFromTokenUseCaseFactory'
 import { getToken } from '../utils/getToken'
 
@@ -29,8 +31,9 @@ async function getContext ({ req }: ExpressContext, prisma: PrismaClient): Promi
 }
 
 export async function setupGraphql (app: Express, prisma: PrismaClient) {
+  const shieldedSchema = applyMiddleware(schema, shields)
   const apolloServer = new ApolloServer({
-    schema,
+    schema: shieldedSchema,
     context: (expressContext) => getContext(expressContext, prisma),
     plugins: [
       process.env.NODE_ENV === 'production'
