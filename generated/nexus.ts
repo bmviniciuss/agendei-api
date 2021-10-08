@@ -31,6 +31,12 @@ export interface NexusGenInputs {
   CreateDayInput: { // input type
     date: NexusGenScalars['DateTime']; // DateTime!
   }
+  CreateSlotInput: { // input type
+    dayId: string; // ID!
+    endDate: NexusGenScalars['DateTime']; // DateTime!
+    startDate: NexusGenScalars['DateTime']; // DateTime!
+    usersLimit: number; // Int!
+  }
   LoginUserInput: { // input type
     email: string; // String!
     password: string; // String!
@@ -70,6 +76,15 @@ export interface NexusGenObjects {
   }
   Mutation: {};
   Query: {};
+  Slot: { // root type
+    active: boolean; // Boolean!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    end: NexusGenScalars['DateTime']; // DateTime!
+    id: string; // ID!
+    start: NexusGenScalars['DateTime']; // DateTime!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    usersLimit: number; // Int!
+  }
   User: { // root type
     active: boolean; // Boolean!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -105,6 +120,7 @@ export interface NexusGenFieldTypes {
   }
   Mutation: { // field return type
     createDay: NexusGenRootTypes['Day'] | null; // Day
+    createSlot: NexusGenRootTypes['Slot'] | null; // Slot
     loginUser: NexusGenRootTypes['LoginUserResult'] | null; // LoginUserResult
     logoutUser: boolean | null; // Boolean
     registerUser: NexusGenRootTypes['User'] | null; // User
@@ -112,6 +128,15 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     getDay: NexusGenRootTypes['Day'] | null; // Day
     me: NexusGenRootTypes['User'] | null; // User
+  }
+  Slot: { // field return type
+    active: boolean; // Boolean!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    end: NexusGenScalars['DateTime']; // DateTime!
+    id: string; // ID!
+    start: NexusGenScalars['DateTime']; // DateTime!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    usersLimit: number; // Int!
   }
   User: { // field return type
     active: boolean; // Boolean!
@@ -138,6 +163,7 @@ export interface NexusGenFieldTypeNames {
   }
   Mutation: { // field return type name
     createDay: 'Day'
+    createSlot: 'Slot'
     loginUser: 'LoginUserResult'
     logoutUser: 'Boolean'
     registerUser: 'User'
@@ -145,6 +171,15 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     getDay: 'Day'
     me: 'User'
+  }
+  Slot: { // field return type name
+    active: 'Boolean'
+    createdAt: 'DateTime'
+    end: 'DateTime'
+    id: 'ID'
+    start: 'DateTime'
+    updatedAt: 'DateTime'
+    usersLimit: 'Int'
   }
   User: { // field return type name
     active: 'Boolean'
@@ -161,6 +196,9 @@ export interface NexusGenArgTypes {
   Mutation: {
     createDay: { // args
       input: NexusGenInputs['CreateDayInput']; // CreateDayInput!
+    }
+    createSlot: { // args
+      input: NexusGenInputs['CreateSlotInput']; // CreateSlotInput!
     }
     loginUser: { // args
       input: NexusGenInputs['LoginUserInput']; // LoginUserInput!
