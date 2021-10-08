@@ -8,10 +8,10 @@ API do projeto agendamento para a disciplina de Engenharia de Software da UFPB
 
 ## Admin
 - [X] Criação do dia
-- [ ] Criação do cronograma do dia
+- [x] Criação do cronograma do dia
 - [ ] Criação de regras de acesso
 
 ## Cliente
-- [ ] Fazer agendamento para um slot
+- [x] Fazer agendamento para um slot
 - [ ] Ver histórico de reservas
 - [ ] Ver comprovante de reserva
