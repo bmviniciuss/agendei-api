@@ -6,6 +6,13 @@ input CreateDayInput {
   date: DateTime!
 }
 
+input CreateSlotInput {
+  dayId: ID!
+  endTime: DateTime!
+  startTime: DateTime!
+  usersLimit: Int!
+}
+
 """
 A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
 """
@@ -16,6 +23,7 @@ type Day {
   createdAt: DateTime!
   date: DateTime!
   id: ID!
+  slots: [Slot!]
   updatedAt: DateTime!
 }
 
@@ -32,6 +40,9 @@ type LoginUserResult {
 type Mutation {
   """Allows a ADMIN to create a day on the system. """
   createDay(input: CreateDayInput!): Day
+
+  """Allows a ADMIN to create a slot on a day on the system. """
+  createSlot(input: CreateSlotInput!): Slot
 
   """Login a user"""
   loginUser(input: LoginUserInput!): LoginUserResult
@@ -56,6 +67,16 @@ input RegisterUserInput {
   name: String!
   password: String!
   passwordConfirmation: String!
+}
+
+type Slot {
+  active: Boolean!
+  createdAt: DateTime!
+  endTime: DateTime!
+  id: ID!
+  startTime: DateTime!
+  updatedAt: DateTime!
+  usersLimit: Int!
 }
 
 type User {
