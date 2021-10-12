@@ -10,11 +10,11 @@ import { loadModulesSchemas } from './helpers/loadModulesSchemas'
 export const DateTime = asNexusMethod(DateTimeResolver, 'date')
 
 export async function makeSchema () {
-  const moduleSchemas = await loadModulesSchemas()
+  const modulesSchemas = await loadModulesSchemas()
   const schema = nexusMakeSchema({
     types: [
       DateTime,
-      ...moduleSchemas
+      ...modulesSchemas
     ],
     outputs: {
       schema: path.join(__dirname, '/../../generated/schema.graphql'),
