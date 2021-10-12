@@ -1,7 +1,7 @@
 
 import { mutationField, inputObjectType, nonNull, arg } from 'nexus'
 
-import { CreateSlotUseCaseFactory } from '../../../../modules/day/use-cases/create-slot/CreateSlotUseCaseFactory'
+import { CreateSlotUseCaseFactory } from '../../../../modules/slot/use-cases/create-slot/CreateSlotUseCaseFactory'
 import { Context } from '../../../../shared/infra/graphql/setupGraphql'
 import { DateTime } from '../../../schema'
 import { SlotNexus } from '../types'
