@@ -2,7 +2,7 @@
 import { mutationField, inputObjectType, nonNull, arg } from 'nexus'
 
 import { Context } from '../../../../shared/infra/graphql/setupGraphql'
-import { TicketNexus } from '../types/ticket'
+import { TicketNexus } from '../../ticket/types/ticket'
 
 export const MakeReservationInput = inputObjectType({
   name: 'MakeReservationInput',

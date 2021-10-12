@@ -1,7 +1,7 @@
 import { list, objectType } from 'nexus'
 
 import { Context } from '../../../../shared/infra/graphql/setupGraphql'
-import { TicketNexus } from './ticket'
+import { TicketNexus } from '../../ticket/types/ticket'
 
 export const SlotNexus = objectType({
   name: 'Slot',

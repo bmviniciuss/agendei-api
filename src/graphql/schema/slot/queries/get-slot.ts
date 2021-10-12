@@ -1,8 +1,7 @@
 import { queryField, nonNull, idArg } from 'nexus'
 
-import { SlotNexus } from '..'
-
 import { Context } from '../../../../shared/infra/graphql/setupGraphql'
+import { SlotNexus } from '../types'
 
 export const GetSlotQuery = queryField('GetSlot', {
   description: '.',

@@ -4,7 +4,7 @@ import { objectType, list, nonNull, enumType } from 'nexus'
 
 import { Context } from '../../../../shared/infra/graphql/setupGraphql'
 import { UserNexus } from '../../user'
-import { SlotNexus } from './slot'
+import { SlotNexus } from '../../slot/types/slot'
 
 export const TicketStatusNexusEnum = enumType({
   name: 'TicketStatus',
