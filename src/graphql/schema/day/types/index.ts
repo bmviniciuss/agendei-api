@@ -1,3 +1,2 @@
 export * from './day'
-export * from './slot'
-export * from './ticket'
+export * from '../../ticket/types/ticket'

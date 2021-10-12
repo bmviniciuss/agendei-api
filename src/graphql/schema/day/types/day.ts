@@ -1,7 +1,7 @@
 import { objectType, list, nonNull } from 'nexus'
 
 import { Context } from '../../../../shared/infra/graphql/setupGraphql'
-import { SlotNexus } from './slot'
+import { SlotNexus } from '../../slot/types'
 
 export const DayNexus = objectType({
   name: 'Day',
