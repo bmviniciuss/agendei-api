@@ -5,8 +5,8 @@ services:
     image: postgres
     restart: always
     environment:
-      POSTGRES_USER: 'gym-manager-user'
-      POSTGRES_PASSWORD: 'gym-manager-pass'
+      POSTGRES_USER: 'agendei-db-user'
+      POSTGRES_PASSWORD: 'agendei-db-pass'
     ports:
       - '15432:5432'
     volumes:

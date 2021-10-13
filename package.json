@@ -1,7 +1,7 @@
 {
-  "name": "scheduling-app-api",
+  "name": "agendei-api",
   "version": "1.0.0",
-  "description": "# Funcionalidades ## Admin (Funcionário da academia)",
+  "description": "Agendei api",
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn src/index.ts",
@@ -10,15 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bmviniciuss/scheduling-app-api.git"
+    "url": "git+https://github.com/bmviniciuss/agendei-api.git"
   },
   "keywords": [],
   "author": "bmviniciuss",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/bmviniciuss/scheduling-app-api/issues"
+    "url": "https://github.com/bmviniciuss/agendei-api/issues"
   },
-  "homepage": "https://github.com/bmviniciuss/scheduling-app-api#readme",
+  "homepage": "https://github.com/bmviniciuss/agendei-api#readme",
   "dependencies": {
     "@prisma/client": "^3.0.2",
     "apollo-server-core": "^3.3.0",

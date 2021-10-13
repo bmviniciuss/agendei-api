@@ -1,4 +1,4 @@
-# scheduling-app-api
+# Agendei API
 API do projeto agendamento para a disciplina de Engenharia de Software da UFPB
 
 # Funcionalidades
