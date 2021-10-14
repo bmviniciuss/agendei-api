@@ -7,7 +7,7 @@ export const SlotNexus = objectType({
   name: 'Slot',
   definition (t) {
     t.nonNull.id('id')
-    t.nonNull.int('usersLimit')
+    t.nonNull.int('numberOfClientsLimit')
     t.nonNull.field('startTime', { type: 'DateTime' })
     t.nonNull.field('endTime', { type: 'DateTime' })
     t.nonNull.field('activeTicketsCount', {
