@@ -37,6 +37,11 @@ export interface NexusGenInputs {
     startTime: NexusGenScalars['DateTime']; // DateTime!
     usersLimit: number; // Int!
   }
+  CreateSpaceInput: { // input type
+    clientsPerSlot: number; // Int!
+    description: string; // String!
+    name: string; // String!
+  }
   LoginUserInput: { // input type
     email: string; // String!
     password: string; // String!
@@ -89,6 +94,13 @@ export interface NexusGenObjects {
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     usersLimit: number; // Int!
   }
+  Space: { // root type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    description: string; // String!
+    id: string; // ID!
+    name: string; // String!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
   Ticket: { // root type
     active: boolean; // Boolean!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -131,6 +143,7 @@ export interface NexusGenFieldTypes {
     user: NexusGenRootTypes['User']; // User!
   }
   Mutation: { // field return type
+    CreateSpace: NexusGenRootTypes['Space'] | null; // Space
     MakeReservation: NexusGenRootTypes['Ticket'] | null; // Ticket
     createDay: NexusGenRootTypes['Day'] | null; // Day
     createSlot: NexusGenRootTypes['Slot'] | null; // Slot
@@ -153,6 +166,13 @@ export interface NexusGenFieldTypes {
     tickets: Array<NexusGenRootTypes['Ticket'] | null>; // [Ticket]!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     usersLimit: number; // Int!
+  }
+  Space: { // field return type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    description: string; // String!
+    id: string; // ID!
+    name: string; // String!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   Ticket: { // field return type
     active: boolean; // Boolean!
@@ -188,6 +208,7 @@ export interface NexusGenFieldTypeNames {
     user: 'User'
   }
   Mutation: { // field return type name
+    CreateSpace: 'Space'
     MakeReservation: 'Ticket'
     createDay: 'Day'
     createSlot: 'Slot'
@@ -211,6 +232,13 @@ export interface NexusGenFieldTypeNames {
     updatedAt: 'DateTime'
     usersLimit: 'Int'
   }
+  Space: { // field return type name
+    createdAt: 'DateTime'
+    description: 'String'
+    id: 'ID'
+    name: 'String'
+    updatedAt: 'DateTime'
+  }
   Ticket: { // field return type name
     active: 'Boolean'
     createdAt: 'DateTime'
@@ -233,6 +261,9 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    CreateSpace: { // args
+      input: NexusGenInputs['CreateSpaceInput']; // CreateSpaceInput!
+    }
     MakeReservation: { // args
       input: NexusGenInputs['MakeReservationInput']; // MakeReservationInput!
     }

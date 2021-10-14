@@ -13,6 +13,12 @@ input CreateSlotInput {
   usersLimit: Int!
 }
 
+input CreateSpaceInput {
+  clientsPerSlot: Int!
+  description: String!
+  name: String!
+}
+
 """
 A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
 """
@@ -42,6 +48,9 @@ input MakeReservationInput {
 }
 
 type Mutation {
+  """Allows a ADMIN to create a space for a company """
+  CreateSpace(input: CreateSpaceInput!): Space
+
   """Allows a CLIENT to reserve a spot on a slot"""
   MakeReservation(input: MakeReservationInput!): Ticket
 
@@ -89,6 +98,14 @@ type Slot {
   tickets: [Ticket]!
   updatedAt: DateTime!
   usersLimit: Int!
+}
+
+type Space {
+  createdAt: DateTime!
+  description: String!
+  id: ID!
+  name: String!
+  updatedAt: DateTime!
 }
 
 type Ticket {
