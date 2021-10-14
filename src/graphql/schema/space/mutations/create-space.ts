@@ -1,9 +1,19 @@
 
 import { mutationField, inputObjectType, nonNull, arg } from 'nexus'
 
-import { SpaceNexus } from '..'
+import { RuleSetTypeEnum, SpaceNexus } from '..'
 
 import { Context } from '../../../../shared/infra/graphql/setupGraphql'
+
+export const CreateSpaceRuleSetInput = inputObjectType({
+  name: 'CreateSpace_RuleSetInput',
+  definition (t) {
+    t.nonNull.int('limit')
+    t.nonNull.field('type', {
+      type: RuleSetTypeEnum
+    })
+  }
+})
 
 export const CreateSpaceInput = inputObjectType({
   name: 'CreateSpaceInput',
@@ -11,6 +21,9 @@ export const CreateSpaceInput = inputObjectType({
     t.nonNull.string('name')
     t.nonNull.string('description')
     t.nonNull.int('clientsPerSlot')
+    t.nonNull.field('ruleSet', {
+      type: CreateSpaceRuleSetInput
+    })
   }
 })
 
@@ -24,11 +37,21 @@ export const CreateSpaceMutation = mutationField('CreateSpace', {
   },
 
   async resolve (_, { input }, { currentUser, prisma }: Context) {
+    const { name, description, clientsPerSlot, ruleSet } = input
     return prisma.space.create({
       data: {
-        name: input.name,
-        description: input.description,
-        clientsPerSlot: input.clientsPerSlot
+        name: name,
+        description: description,
+        clientsPerSlot: clientsPerSlot,
+        ruleSet: {
+          create: {
+            limit: ruleSet.limit,
+            type: ruleSet.type
+          }
+        }
+      },
+      include: {
+        ruleSet: true
       }
     })
   }

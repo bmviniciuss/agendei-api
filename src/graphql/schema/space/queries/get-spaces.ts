@@ -11,6 +11,9 @@ export const GetSpacesQuery = queryField('GetSpaces', {
     return prisma.space.findMany({
       where: {
         active: true
+      },
+      include: {
+        ruleSet: true
       }
     })
   }

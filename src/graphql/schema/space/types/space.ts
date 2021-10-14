@@ -2,6 +2,7 @@ import { list, nonNull, objectType } from 'nexus'
 
 import { Context } from '../../../../shared/infra/graphql/setupGraphql'
 import { SlotNexus } from '../../slot/types'
+import { SpaceRuleSetNexus } from './rule-set'
 
 export const SpaceNexus = objectType({
   name: 'Space',
@@ -15,6 +16,16 @@ export const SpaceNexus = objectType({
       type: list(nonNull(SlotNexus)),
       async resolve (root, _args, { prisma }: Context) {
         return prisma.slot.findMany({
+          where: {
+            spaceId: root.id
+          }
+        })
+      }
+    })
+    t.field('ruleSet', {
+      type: SpaceRuleSetNexus,
+      async resolve (root, _args, { prisma }:Context) {
+        return prisma.spaceRuleSet.findUnique({
           where: {
             spaceId: root.id
           }

@@ -38,6 +38,11 @@ export interface NexusGenInputs {
     clientsPerSlot: number; // Int!
     description: string; // String!
     name: string; // String!
+    ruleSet: NexusGenInputs['CreateSpace_RuleSetInput']; // CreateSpace_RuleSetInput!
+  }
+  CreateSpace_RuleSetInput: { // input type
+    limit: number; // Int!
+    type: NexusGenEnums['RuleSetTypeEnum']; // RuleSetTypeEnum!
   }
   LoginUserInput: { // input type
     email: string; // String!
@@ -55,6 +60,7 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
+  RuleSetTypeEnum: "DAILY" | "MONTHLY" | "WEEKLY"
   TicketStatus: "CANCELED" | "RESERVED" | "USED"
   UserType: "ADMIN" | "CLIENT"
 }
@@ -91,6 +97,14 @@ export interface NexusGenObjects {
     description: string; // String!
     id: string; // ID!
     name: string; // String!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
+  SpaceRuleSet: { // root type
+    active: boolean; // Boolean!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: string; // ID!
+    limit: number; // Int!
+    type: NexusGenEnums['RuleSetTypeEnum']; // RuleSetTypeEnum!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   Ticket: { // root type
@@ -157,7 +171,16 @@ export interface NexusGenFieldTypes {
     description: string; // String!
     id: string; // ID!
     name: string; // String!
+    ruleSet: NexusGenRootTypes['SpaceRuleSet'] | null; // SpaceRuleSet
     slots: NexusGenRootTypes['Slot'][] | null; // [Slot!]
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
+  SpaceRuleSet: { // field return type
+    active: boolean; // Boolean!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: string; // ID!
+    limit: number; // Int!
+    type: NexusGenEnums['RuleSetTypeEnum']; // RuleSetTypeEnum!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   Ticket: { // field return type
@@ -215,7 +238,16 @@ export interface NexusGenFieldTypeNames {
     description: 'String'
     id: 'ID'
     name: 'String'
+    ruleSet: 'SpaceRuleSet'
     slots: 'Slot'
+    updatedAt: 'DateTime'
+  }
+  SpaceRuleSet: { // field return type name
+    active: 'Boolean'
+    createdAt: 'DateTime'
+    id: 'ID'
+    limit: 'Int'
+    type: 'RuleSetTypeEnum'
     updatedAt: 'DateTime'
   }
   Ticket: { // field return type name

@@ -13,6 +13,12 @@ input CreateSpaceInput {
   clientsPerSlot: Int!
   description: String!
   name: String!
+  ruleSet: CreateSpace_RuleSetInput!
+}
+
+input CreateSpace_RuleSetInput {
+  limit: Int!
+  type: RuleSetTypeEnum!
 }
 
 """
@@ -72,6 +78,12 @@ input RegisterUserInput {
   passwordConfirmation: String!
 }
 
+enum RuleSetTypeEnum {
+  DAILY
+  MONTHLY
+  WEEKLY
+}
+
 type Slot {
   active: Boolean!
   activeTicketsCount: Int!
@@ -91,7 +103,17 @@ type Space {
   description: String!
   id: ID!
   name: String!
+  ruleSet: SpaceRuleSet
   slots: [Slot!]
+  updatedAt: DateTime!
+}
+
+type SpaceRuleSet {
+  active: Boolean!
+  createdAt: DateTime!
+  id: ID!
+  limit: Int!
+  type: RuleSetTypeEnum!
   updatedAt: DateTime!
 }
 
