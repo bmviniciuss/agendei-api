@@ -9,6 +9,7 @@ export const SpaceNexus = objectType({
     t.nonNull.id('id')
     t.nonNull.string('name')
     t.nonNull.string('description')
+    t.nonNull.int('clientsPerSlot')
     t.nonNull.boolean('active')
     t.field('slots', {
       type: list(nonNull(SlotNexus)),

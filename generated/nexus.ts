@@ -86,6 +86,7 @@ export interface NexusGenObjects {
   }
   Space: { // root type
     active: boolean; // Boolean!
+    clientsPerSlot: number; // Int!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     description: string; // String!
     id: string; // ID!
@@ -151,6 +152,7 @@ export interface NexusGenFieldTypes {
   }
   Space: { // field return type
     active: boolean; // Boolean!
+    clientsPerSlot: number; // Int!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     description: string; // String!
     id: string; // ID!
@@ -208,6 +210,7 @@ export interface NexusGenFieldTypeNames {
   }
   Space: { // field return type name
     active: 'Boolean'
+    clientsPerSlot: 'Int'
     createdAt: 'DateTime'
     description: 'String'
     id: 'ID'

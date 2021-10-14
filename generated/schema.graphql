@@ -86,6 +86,7 @@ type Slot {
 
 type Space {
   active: Boolean!
+  clientsPerSlot: Int!
   createdAt: DateTime!
   description: String!
   id: ID!
