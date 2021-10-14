@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/bmviniciuss/agendei-api#readme",
   "dependencies": {
-    "@prisma/client": "^3.0.2",
+    "@prisma/client": "^3.2.1",
     "apollo-server-core": "^3.3.0",
     "apollo-server-express": "^3.3.0",
     "bcrypt": "^5.0.1",
@@ -50,7 +50,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
     "git-commit-msg-linter": "^3.2.8",
-    "prisma": "^3.0.2",
+    "prisma": "^3.2.1",
     "ts-node": "^10.2.1",
     "ts-node-dev": "^1.1.8"
   }
