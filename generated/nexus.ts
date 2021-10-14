@@ -155,6 +155,7 @@ export interface NexusGenFieldTypes {
     description: string; // String!
     id: string; // ID!
     name: string; // String!
+    slots: NexusGenRootTypes['Slot'][] | null; // [Slot!]
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   Ticket: { // field return type
@@ -211,6 +212,7 @@ export interface NexusGenFieldTypeNames {
     description: 'String'
     id: 'ID'
     name: 'String'
+    slots: 'Slot'
     updatedAt: 'DateTime'
   }
   Ticket: { // field return type name

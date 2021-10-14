@@ -90,6 +90,7 @@ type Space {
   description: String!
   id: ID!
   name: String!
+  slots: [Slot!]
   updatedAt: DateTime!
 }
 
