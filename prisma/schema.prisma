@@ -29,6 +29,15 @@ enum UserType {
   CLIENT
 }
 
+model Space {
+  id             String   @id @default(uuid())
+  name           String
+  description    String
+  clientsPerSlot Int
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
 model Day {
   id     String   @id @default(uuid())
   date   DateTime
