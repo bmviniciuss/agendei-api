@@ -1,8 +1,15 @@
-
 import { mutationField, inputObjectType, nonNull, arg } from 'nexus'
+import startOfDay from 'date-fns/startOfDay'
+import endOfDay from 'date-fns/endOfDay'
+import startOfMonth from 'date-fns/startOfMonth'
+import endOfMonth from 'date-fns/endOfMonth'
+import startOfISOWeek from 'date-fns/startOfISOWeek'
+import endOfISOWeek from 'date-fns/endOfISOWeek'
 
 import { Context } from '../../../../shared/infra/graphql/setupGraphql'
 import { TicketNexus } from '../../ticket/types/ticket'
+
+import { RuleSetTypeEnum, TicketStatus } from '.prisma/client'
 
 export const MakeReservationInput = inputObjectType({
   name: 'MakeReservationInput',
@@ -21,26 +28,40 @@ export const MakeReservationMutation = mutationField('MakeReservation', {
   },
 
   async resolve (_, { input }, { currentUser, prisma }: Context) {
-    console.log(input)
+    const { slotId } = input
+    const ticketStatusFilter = [TicketStatus.RESERVED, TicketStatus.USED]
 
-    // Verificando se slot existe e pegando valor maximo de tickets permitidos
+    // Get slot and associated space
     const slot = await prisma.slot.findFirst({
       where: {
-        id: input.slotId
+        id: slotId
       },
-      select: {
-        numberOfClientsLimit: true
+      include: {
+        space: {
+          include: {
+            ruleSet: true
+          }
+        }
       }
     })
 
     if (!slot) throw new Error('Slot não existe')
+
+    const hasUserAlredyReservedThisSlot = await prisma.ticket.findFirst({
+      where: {
+        slotId: input.slotId,
+        userId: currentUser!.id
+      }
+    })
+
+    if (hasUserAlredyReservedThisSlot) throw new Error('O usuário já tem um ticket desse slot')
 
     // Pegar tickets reservados, pois ja usados quer dizer que o ex
     const slotTicketsCount = await prisma.ticket.count({
       where: {
         slotId: input.slotId,
         status: {
-          in: ['RESERVED', 'USED']
+          in: ticketStatusFilter
         }
       }
     })
@@ -49,19 +70,41 @@ export const MakeReservationMutation = mutationField('MakeReservation', {
       throw new Error('Slot já está cheio')
     }
 
-    // TODO: adicionar validação de acordo com regra do estabelecimento
+    // se tenho rule set, vou verificar se posso criar o ticket
+    if (slot?.space?.ruleSet) {
+      const { type, limit } = slot.space.ruleSet
+      const { startTime: slotStartTime } = slot
+      const verificationRangeSlot = (() => {
+        switch (type) {
+          case RuleSetTypeEnum.DAILY:
+            return [startOfDay(slotStartTime), endOfDay(slotStartTime)]
+          case RuleSetTypeEnum.WEEKLY:
+            return [startOfISOWeek(slotStartTime), endOfISOWeek(slotStartTime)]
+          case RuleSetTypeEnum.MONTHLY:
+            return [startOfMonth(slotStartTime), endOfMonth(slotStartTime)]
+        }
+      })()
+      const usersTicketFromRangeCount = await prisma.ticket.count({
+        where: {
+          userId: currentUser?.id,
+          status: {
+            in: ticketStatusFilter
+          },
+          slot: {
+            startTime: {
+              gte: verificationRangeSlot[0],
+              lte: verificationRangeSlot[1]
+            }
+          }
+        }
+      })
 
-    const hasUserAlredyReservedThisSlot = await prisma.ticket.findFirst({
-      where: {
-        slotId: input.slotId,
-        userId: currentUser!.id
-      }
-    })
-    if (hasUserAlredyReservedThisSlot) throw new Error('Usuário já reservou esse slot')
+      if (usersTicketFromRangeCount + 1 > limit) throw new Error('Você chegou no limite de tickets')
+    }
 
     return prisma.ticket.create({
       data: {
-        status: 'RESERVED',
+        status: TicketStatus.RESERVED,
         user: {
           connect: {
             id: currentUser!.id
