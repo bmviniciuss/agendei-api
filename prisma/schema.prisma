@@ -43,9 +43,23 @@ model Space {
 }
 
 model SpaceRuleSet {
-  id      String @id @default(uuid())
+  id String @id @default(uuid())
+
   space   Space  @relation(fields: [spaceId], references: [id])
   spaceId String @unique
+
+  limit Int
+  type  RuleSetTypeEnum @default(DAILY)
+
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum RuleSetTypeEnum {
+  DAILY
+  WEEKLY
+  MONTHLY
 }
 
 model Slot {
