@@ -2,13 +2,6 @@
 ### Do not make changes to this file directly
 
 
-input CreateSlotInput {
-  endTime: DateTime!
-  numberOfClientsLimit: Int!
-  spaceId: ID!
-  startTime: DateTime!
-}
-
 input CreateSpaceInput {
   clientsPerSlot: Int!
   description: String!
@@ -41,9 +34,6 @@ input MakeReservationInput {
 }
 
 type Mutation {
-  """Allows a ADMIN to create a slot on a day on the system. """
-  CreateSlot(input: CreateSlotInput!): Slot
-
   """Allows a ADMIN to create a space for a company """
   CreateSpace(input: CreateSpaceInput!): Space
 
@@ -61,9 +51,6 @@ type Mutation {
 }
 
 type Query {
-  """."""
-  GetSlot(id: ID!): Slot
-
   """Get all spaces"""
   GetSpaces: [Space!]
 
@@ -84,18 +71,6 @@ enum RuleSetTypeEnum {
   WEEKLY
 }
 
-type Slot {
-  active: Boolean!
-  activeTicketsCount: Int!
-  createdAt: DateTime!
-  endTime: DateTime!
-  id: ID!
-  numberOfClientsLimit: Int!
-  startTime: DateTime!
-  tickets: [Ticket]!
-  updatedAt: DateTime!
-}
-
 type Space {
   active: Boolean!
   clientsPerSlot: Int!
@@ -104,7 +79,6 @@ type Space {
   id: ID!
   name: String!
   ruleSet: SpaceRuleSet
-  slots: [Slot!]
   updatedAt: DateTime!
 }
 
