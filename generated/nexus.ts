@@ -28,6 +28,17 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  CreateEventInput: { // input type
+    eventDetails: NexusGenInputs['CreateEvent_EventDetailsInput']; // CreateEvent_EventDetailsInput!
+    rule: string; // String!
+    spaceId: string; // ID!
+  }
+  CreateEvent_EventDetailsInput: { // input type
+    description: string; // String!
+    duration: number; // Float!
+    slots: number; // Int!
+    title: string; // String!
+  }
   CreateSpaceInput: { // input type
     clientsPerSlot: number; // Int!
     description: string; // String!
@@ -54,6 +65,7 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
+  EventTypeEnum: "BOOKED" | "CANCELED" | "EVENT" | "EXCEPTION" | "OCCURRENCE"
   RuleSetTypeEnum: "DAILY" | "MONTHLY" | "WEEKLY"
   TicketStatus: "CANCELED" | "RESERVED" | "USED"
   UserType: "ADMIN" | "CLIENT"
@@ -69,6 +81,24 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  Event: { // root type
+    active?: boolean | null; // Boolean
+    createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    id: string; // ID!
+    rule: string; // String!
+    updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
+  }
+  EventDetails: { // root type
+    active?: boolean | null; // Boolean
+    createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    description?: string | null; // String
+    duration?: number | null; // Float
+    id: string; // ID!
+    slots?: number | null; // Int
+    title?: string | null; // String
+    type: NexusGenEnums['EventTypeEnum']; // EventTypeEnum!
+    updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
+  }
   LoginUserResult: { // root type
     accessToken: string; // String!
     user: NexusGenRootTypes['User']; // User!
@@ -121,11 +151,31 @@ export type NexusGenRootTypes = NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
+  Event: { // field return type
+    active: boolean | null; // Boolean
+    createdAt: NexusGenScalars['DateTime'] | null; // DateTime
+    eventDetails: NexusGenRootTypes['EventDetails'] | null; // EventDetails
+    id: string; // ID!
+    rule: string; // String!
+    updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
+  }
+  EventDetails: { // field return type
+    active: boolean | null; // Boolean
+    createdAt: NexusGenScalars['DateTime'] | null; // DateTime
+    description: string | null; // String
+    duration: number | null; // Float
+    id: string; // ID!
+    slots: number | null; // Int
+    title: string | null; // String
+    type: NexusGenEnums['EventTypeEnum']; // EventTypeEnum!
+    updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
+  }
   LoginUserResult: { // field return type
     accessToken: string; // String!
     user: NexusGenRootTypes['User']; // User!
   }
   Mutation: { // field return type
+    CreateEvent: NexusGenRootTypes['Event'] | null; // Event
     CreateSpace: NexusGenRootTypes['Space'] | null; // Space
     MakeReservation: NexusGenRootTypes['Ticket'] | null; // Ticket
     loginUser: NexusGenRootTypes['LoginUserResult'] | null; // LoginUserResult
@@ -141,6 +191,7 @@ export interface NexusGenFieldTypes {
     clientsPerSlot: number; // Int!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     description: string; // String!
+    events: NexusGenRootTypes['Event'][] | null; // [Event!]
     id: string; // ID!
     name: string; // String!
     ruleSet: NexusGenRootTypes['SpaceRuleSet'] | null; // SpaceRuleSet
@@ -174,11 +225,31 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
+  Event: { // field return type name
+    active: 'Boolean'
+    createdAt: 'DateTime'
+    eventDetails: 'EventDetails'
+    id: 'ID'
+    rule: 'String'
+    updatedAt: 'DateTime'
+  }
+  EventDetails: { // field return type name
+    active: 'Boolean'
+    createdAt: 'DateTime'
+    description: 'String'
+    duration: 'Float'
+    id: 'ID'
+    slots: 'Int'
+    title: 'String'
+    type: 'EventTypeEnum'
+    updatedAt: 'DateTime'
+  }
   LoginUserResult: { // field return type name
     accessToken: 'String'
     user: 'User'
   }
   Mutation: { // field return type name
+    CreateEvent: 'Event'
     CreateSpace: 'Space'
     MakeReservation: 'Ticket'
     loginUser: 'LoginUserResult'
@@ -194,6 +265,7 @@ export interface NexusGenFieldTypeNames {
     clientsPerSlot: 'Int'
     createdAt: 'DateTime'
     description: 'String'
+    events: 'Event'
     id: 'ID'
     name: 'String'
     ruleSet: 'SpaceRuleSet'
@@ -228,6 +300,9 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    CreateEvent: { // args
+      input: NexusGenInputs['CreateEventInput']; // CreateEventInput!
+    }
     CreateSpace: { // args
       input: NexusGenInputs['CreateSpaceInput']; // CreateSpaceInput!
     }

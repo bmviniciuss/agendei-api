@@ -62,19 +62,14 @@ enum RuleSetTypeEnum {
 
 model Event {
   id String @id @default(uuid())
-
   rule String
-
   space   Space  @relation(fields: [spaceId], references: [id])
   spaceId String
-
   eventDetails   EventDetails @relation(fields: [eventDetailsId], references: [id])
   eventDetailsId String
-
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
   eventsBooked EventBooked[]
 }
 
@@ -87,7 +82,7 @@ model EventDetails {
   slots    Int
   type     EventTypeEnum @default(OCCURRENCE)
 
-  events Event[]
+  event Event?
 
   active       Boolean       @default(true)
   createdAt    DateTime      @default(now())
