@@ -12,15 +12,15 @@ export class CreateSlotUseCase implements UseCase<CreateSlotDTO, CreateSlotResul
   ) {}
 
   async execute (data: CreateSlotDTO): Promise<CreateSlotResult> {
-    const { dayId, usersLimit, startTime, endTime } = data
+    const { spaceId, numberOfClientsLimit, startTime, endTime } = data
     return this.prisma.slot.create({
       data: {
-        usersLimit,
+        numberOfClientsLimit,
         startTime: new Date(startTime),
         endTime: new Date(endTime),
-        day: {
+        space: {
           connect: {
-            id: dayId
+            id: spaceId
           }
         }
       }

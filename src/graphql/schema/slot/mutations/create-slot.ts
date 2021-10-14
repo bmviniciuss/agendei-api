@@ -9,8 +9,8 @@ import { SlotNexus } from '../types'
 export const CreateSlotInput = inputObjectType({
   name: 'CreateSlotInput',
   definition (t) {
-    t.nonNull.id('dayId')
-    t.nonNull.int('usersLimit')
+    t.nonNull.id('spaceId')
+    t.nonNull.int('numberOfClientsLimit')
     t.nonNull.field('startTime', { type: DateTime })
     t.nonNull.field('endTime', { type: DateTime })
   }
