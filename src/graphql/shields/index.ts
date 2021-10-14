@@ -14,7 +14,6 @@ export const shields = shield({
   Mutation: {
     '*': isAuthenticated,
     CreateSpace: authenticatedAdminShield,
-    createDay: authenticatedAdminShield,
     createSlot: authenticatedAdminShield,
     registerUser: allow,
     loginUser: allow

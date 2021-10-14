@@ -2,15 +2,11 @@
 ### Do not make changes to this file directly
 
 
-input CreateDayInput {
-  date: DateTime!
-}
-
 input CreateSlotInput {
-  dayId: ID!
   endTime: DateTime!
+  numberOfClientsLimit: Int!
+  spaceId: ID!
   startTime: DateTime!
-  usersLimit: Int!
 }
 
 input CreateSpaceInput {
@@ -23,15 +19,6 @@ input CreateSpaceInput {
 A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
 """
 scalar DateTime
-
-type Day {
-  active: Boolean!
-  createdAt: DateTime!
-  date: DateTime!
-  id: ID!
-  slots: [Slot!]
-  updatedAt: DateTime!
-}
 
 input LoginUserInput {
   email: String!
@@ -54,9 +41,6 @@ type Mutation {
   """Allows a CLIENT to reserve a spot on a slot"""
   MakeReservation(input: MakeReservationInput!): Ticket
 
-  """Allows a ADMIN to create a day on the system. """
-  createDay(input: CreateDayInput!): Day
-
   """Allows a ADMIN to create a slot on a day on the system. """
   createSlot(input: CreateSlotInput!): Slot
 
@@ -71,9 +55,6 @@ type Mutation {
 }
 
 type Query {
-  """."""
-  GetDay(date: DateTime!): Day
-
   """."""
   GetSlot(id: ID!): Slot
 
@@ -97,10 +78,10 @@ type Slot {
   createdAt: DateTime!
   endTime: DateTime!
   id: ID!
+  numberOfClientsLimit: Int!
   startTime: DateTime!
   tickets: [Ticket]!
   updatedAt: DateTime!
-  usersLimit: Int!
 }
 
 type Space {
@@ -116,7 +97,6 @@ type Ticket {
   active: Boolean!
   createdAt: DateTime!
   id: ID!
-  slots: [Slot!]
   status: TicketStatus!
   updatedAt: DateTime!
   user: User
