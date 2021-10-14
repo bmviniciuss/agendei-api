@@ -29,7 +29,7 @@ export const MakeReservationMutation = mutationField('MakeReservation', {
         id: input.slotId
       },
       select: {
-        usersLimit: true
+        numberOfClientsLimit: true
       }
     })
 
@@ -45,7 +45,7 @@ export const MakeReservationMutation = mutationField('MakeReservation', {
       }
     })
 
-    if (slotTicketsCount + 1 > slot.usersLimit) {
+    if (slotTicketsCount + 1 > slot.numberOfClientsLimit) {
       throw new Error('Slot já está cheio')
     }
 

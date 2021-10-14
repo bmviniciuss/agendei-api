@@ -28,14 +28,21 @@ declare global {
 }
 
 export interface NexusGenInputs {
-  CreateDayInput: { // input type
-    date: NexusGenScalars['DateTime']; // DateTime!
-  }
   CreateSlotInput: { // input type
-    dayId: string; // ID!
     endTime: NexusGenScalars['DateTime']; // DateTime!
+    numberOfClientsLimit: number; // Int!
+    spaceId: string; // ID!
     startTime: NexusGenScalars['DateTime']; // DateTime!
-    usersLimit: number; // Int!
+  }
+  CreateSpaceInput: { // input type
+    clientsPerSlot: number; // Int!
+    description: string; // String!
+    name: string; // String!
+    ruleSet: NexusGenInputs['CreateSpace_RuleSetInput']; // CreateSpace_RuleSetInput!
+  }
+  CreateSpace_RuleSetInput: { // input type
+    limit: number; // Int!
+    type: NexusGenEnums['RuleSetTypeEnum']; // RuleSetTypeEnum!
   }
   LoginUserInput: { // input type
     email: string; // String!
@@ -53,6 +60,7 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
+  RuleSetTypeEnum: "DAILY" | "MONTHLY" | "WEEKLY"
   TicketStatus: "CANCELED" | "RESERVED" | "USED"
   UserType: "ADMIN" | "CLIENT"
 }
@@ -67,13 +75,6 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
-  Day: { // root type
-    active: boolean; // Boolean!
-    createdAt: NexusGenScalars['DateTime']; // DateTime!
-    date: NexusGenScalars['DateTime']; // DateTime!
-    id: string; // ID!
-    updatedAt: NexusGenScalars['DateTime']; // DateTime!
-  }
   LoginUserResult: { // root type
     accessToken: string; // String!
     user: NexusGenRootTypes['User']; // User!
@@ -85,9 +86,26 @@ export interface NexusGenObjects {
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     endTime: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
+    numberOfClientsLimit: number; // Int!
     startTime: NexusGenScalars['DateTime']; // DateTime!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
-    usersLimit: number; // Int!
+  }
+  Space: { // root type
+    active: boolean; // Boolean!
+    clientsPerSlot: number; // Int!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    description: string; // String!
+    id: string; // ID!
+    name: string; // String!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
+  SpaceRuleSet: { // root type
+    active: boolean; // Boolean!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: string; // ID!
+    limit: number; // Int!
+    type: NexusGenEnums['RuleSetTypeEnum']; // RuleSetTypeEnum!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   Ticket: { // root type
     active: boolean; // Boolean!
@@ -118,29 +136,21 @@ export type NexusGenRootTypes = NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
-  Day: { // field return type
-    active: boolean; // Boolean!
-    createdAt: NexusGenScalars['DateTime']; // DateTime!
-    date: NexusGenScalars['DateTime']; // DateTime!
-    id: string; // ID!
-    slots: NexusGenRootTypes['Slot'][] | null; // [Slot!]
-    updatedAt: NexusGenScalars['DateTime']; // DateTime!
-  }
   LoginUserResult: { // field return type
     accessToken: string; // String!
     user: NexusGenRootTypes['User']; // User!
   }
   Mutation: { // field return type
+    CreateSlot: NexusGenRootTypes['Slot'] | null; // Slot
+    CreateSpace: NexusGenRootTypes['Space'] | null; // Space
     MakeReservation: NexusGenRootTypes['Ticket'] | null; // Ticket
-    createDay: NexusGenRootTypes['Day'] | null; // Day
-    createSlot: NexusGenRootTypes['Slot'] | null; // Slot
     loginUser: NexusGenRootTypes['LoginUserResult'] | null; // LoginUserResult
     logoutUser: boolean | null; // Boolean
     registerUser: NexusGenRootTypes['User'] | null; // User
   }
   Query: { // field return type
-    GetDay: NexusGenRootTypes['Day'] | null; // Day
     GetSlot: NexusGenRootTypes['Slot'] | null; // Slot
+    GetSpaces: NexusGenRootTypes['Space'][] | null; // [Space!]
     me: NexusGenRootTypes['User'] | null; // User
   }
   Slot: { // field return type
@@ -149,16 +159,34 @@ export interface NexusGenFieldTypes {
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     endTime: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
+    numberOfClientsLimit: number; // Int!
     startTime: NexusGenScalars['DateTime']; // DateTime!
     tickets: Array<NexusGenRootTypes['Ticket'] | null>; // [Ticket]!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
-    usersLimit: number; // Int!
+  }
+  Space: { // field return type
+    active: boolean; // Boolean!
+    clientsPerSlot: number; // Int!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    description: string; // String!
+    id: string; // ID!
+    name: string; // String!
+    ruleSet: NexusGenRootTypes['SpaceRuleSet'] | null; // SpaceRuleSet
+    slots: NexusGenRootTypes['Slot'][] | null; // [Slot!]
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  }
+  SpaceRuleSet: { // field return type
+    active: boolean; // Boolean!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: string; // ID!
+    limit: number; // Int!
+    type: NexusGenEnums['RuleSetTypeEnum']; // RuleSetTypeEnum!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   Ticket: { // field return type
     active: boolean; // Boolean!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
-    slots: NexusGenRootTypes['Slot'][] | null; // [Slot!]
     status: NexusGenEnums['TicketStatus']; // TicketStatus!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     user: NexusGenRootTypes['User'] | null; // User
@@ -175,29 +203,21 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
-  Day: { // field return type name
-    active: 'Boolean'
-    createdAt: 'DateTime'
-    date: 'DateTime'
-    id: 'ID'
-    slots: 'Slot'
-    updatedAt: 'DateTime'
-  }
   LoginUserResult: { // field return type name
     accessToken: 'String'
     user: 'User'
   }
   Mutation: { // field return type name
+    CreateSlot: 'Slot'
+    CreateSpace: 'Space'
     MakeReservation: 'Ticket'
-    createDay: 'Day'
-    createSlot: 'Slot'
     loginUser: 'LoginUserResult'
     logoutUser: 'Boolean'
     registerUser: 'User'
   }
   Query: { // field return type name
-    GetDay: 'Day'
     GetSlot: 'Slot'
+    GetSpaces: 'Space'
     me: 'User'
   }
   Slot: { // field return type name
@@ -206,16 +226,34 @@ export interface NexusGenFieldTypeNames {
     createdAt: 'DateTime'
     endTime: 'DateTime'
     id: 'ID'
+    numberOfClientsLimit: 'Int'
     startTime: 'DateTime'
     tickets: 'Ticket'
     updatedAt: 'DateTime'
-    usersLimit: 'Int'
+  }
+  Space: { // field return type name
+    active: 'Boolean'
+    clientsPerSlot: 'Int'
+    createdAt: 'DateTime'
+    description: 'String'
+    id: 'ID'
+    name: 'String'
+    ruleSet: 'SpaceRuleSet'
+    slots: 'Slot'
+    updatedAt: 'DateTime'
+  }
+  SpaceRuleSet: { // field return type name
+    active: 'Boolean'
+    createdAt: 'DateTime'
+    id: 'ID'
+    limit: 'Int'
+    type: 'RuleSetTypeEnum'
+    updatedAt: 'DateTime'
   }
   Ticket: { // field return type name
     active: 'Boolean'
     createdAt: 'DateTime'
     id: 'ID'
-    slots: 'Slot'
     status: 'TicketStatus'
     updatedAt: 'DateTime'
     user: 'User'
@@ -233,14 +271,14 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    CreateSlot: { // args
+      input: NexusGenInputs['CreateSlotInput']; // CreateSlotInput!
+    }
+    CreateSpace: { // args
+      input: NexusGenInputs['CreateSpaceInput']; // CreateSpaceInput!
+    }
     MakeReservation: { // args
       input: NexusGenInputs['MakeReservationInput']; // MakeReservationInput!
-    }
-    createDay: { // args
-      input: NexusGenInputs['CreateDayInput']; // CreateDayInput!
-    }
-    createSlot: { // args
-      input: NexusGenInputs['CreateSlotInput']; // CreateSlotInput!
     }
     loginUser: { // args
       input: NexusGenInputs['LoginUserInput']; // LoginUserInput!
@@ -250,9 +288,6 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
-    GetDay: { // args
-      date: NexusGenScalars['DateTime']; // DateTime!
-    }
     GetSlot: { // args
       id: string; // ID!
     }

@@ -13,8 +13,8 @@ export const shields = shield({
   },
   Mutation: {
     '*': isAuthenticated,
-    createDay: authenticatedAdminShield,
-    createSlot: authenticatedAdminShield,
+    CreateSpace: authenticatedAdminShield,
+    CreateSlot: authenticatedAdminShield,
     registerUser: allow,
     loginUser: allow
   },

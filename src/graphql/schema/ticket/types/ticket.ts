@@ -1,10 +1,9 @@
 import { TicketStatus } from '.prisma/client'
 
-import { objectType, list, nonNull, enumType } from 'nexus'
+import { objectType, enumType } from 'nexus'
 
 import { Context } from '../../../../shared/infra/graphql/setupGraphql'
 import { UserNexus } from '../../user'
-import { SlotNexus } from '../../slot/types/slot'
 
 export const TicketStatusNexusEnum = enumType({
   name: 'TicketStatus',
@@ -33,18 +32,5 @@ export const TicketNexus = objectType({
 
     t.nonNull.field('createdAt', { type: 'DateTime' })
     t.nonNull.field('updatedAt', { type: 'DateTime' })
-    t.field('slots', {
-      type: list(nonNull(SlotNexus)),
-      resolve (root, _args, { prisma }: Context) {
-        return prisma.slot.findMany({
-          where: {
-            dayId: root.id
-          },
-          orderBy: {
-            startTime: 'asc'
-          }
-        })
-      }
-    })
   }
 })

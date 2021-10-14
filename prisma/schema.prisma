@@ -20,7 +20,6 @@ model User {
   active      Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  Days        Day[]
   tickets     Ticket[]
 }
 
@@ -29,30 +28,50 @@ enum UserType {
   CLIENT
 }
 
-model Day {
-  id     String   @id @default(uuid())
-  date   DateTime
-  active Boolean  @default(true)
+model Space {
+  id             String @id @default(uuid())
+  name           String
+  description    String
+  clientsPerSlot Int
 
-  createdBy   User   @relation(fields: [createdById], references: [id])
-  createdById String
+  slot    Slot[]
+  ruleSet SpaceRuleSet?
 
-  slots Slot[]
-
+  active    Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model SpaceRuleSet {
+  id String @id @default(uuid())
+
+  space   Space  @relation(fields: [spaceId], references: [id])
+  spaceId String @unique
+
+  limit Int
+  type  RuleSetTypeEnum @default(DAILY)
+
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum RuleSetTypeEnum {
+  DAILY
+  WEEKLY
+  MONTHLY
 }
 
 model Slot {
   id String @id @default(uuid())
 
-  usersLimit Int
+  numberOfClientsLimit Int
 
   startTime DateTime
   endTime   DateTime
 
-  day   Day    @relation(fields: [dayId], references: [id])
-  dayId String
+  space   Space  @relation(fields: [spaceId], references: [id])
+  spaceId String
 
   tickets Ticket[]
 
