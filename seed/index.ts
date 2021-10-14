@@ -160,9 +160,9 @@ async function makeReservation (eventId: Event['id'], date: Date) {
 }
 
 async function main () {
-  // await makeAdmin()
+  await makeAdmin()
   // await makeEvent()
-  await loadOccurrences()
+  // await loadOccurrences()
 
   // await makeReservation(eventId, reservationDate)
   // console.log('DEPOIS')
