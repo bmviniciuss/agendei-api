@@ -95,6 +95,7 @@ export interface NexusGenObjects {
     usersLimit: number; // Int!
   }
   Space: { // root type
+    active: boolean; // Boolean!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     description: string; // String!
     id: string; // ID!
@@ -154,6 +155,7 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     GetDay: NexusGenRootTypes['Day'] | null; // Day
     GetSlot: NexusGenRootTypes['Slot'] | null; // Slot
+    GetSpaces: NexusGenRootTypes['Space'][] | null; // [Space!]
     me: NexusGenRootTypes['User'] | null; // User
   }
   Slot: { // field return type
@@ -168,6 +170,7 @@ export interface NexusGenFieldTypes {
     usersLimit: number; // Int!
   }
   Space: { // field return type
+    active: boolean; // Boolean!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     description: string; // String!
     id: string; // ID!
@@ -219,6 +222,7 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     GetDay: 'Day'
     GetSlot: 'Slot'
+    GetSpaces: 'Space'
     me: 'User'
   }
   Slot: { // field return type name
@@ -233,6 +237,7 @@ export interface NexusGenFieldTypeNames {
     usersLimit: 'Int'
   }
   Space: { // field return type name
+    active: 'Boolean'
     createdAt: 'DateTime'
     description: 'String'
     id: 'ID'

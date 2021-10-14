@@ -6,6 +6,7 @@ export const SpaceNexus = objectType({
     t.nonNull.id('id')
     t.nonNull.string('name')
     t.nonNull.string('description')
+    t.nonNull.boolean('active')
     t.nonNull.field('createdAt', { type: 'DateTime' })
     t.nonNull.field('updatedAt', { type: 'DateTime' })
   }
