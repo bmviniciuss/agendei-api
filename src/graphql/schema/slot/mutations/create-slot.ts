@@ -16,7 +16,7 @@ export const CreateSlotInput = inputObjectType({
   }
 })
 
-export const CreateSlotMutation = mutationField('createSlot', {
+export const CreateSlotMutation = mutationField('CreateSlot', {
   description: 'Allows a ADMIN to create a slot on a day on the system. ',
   type: SlotNexus,
   args: {

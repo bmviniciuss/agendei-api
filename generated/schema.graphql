@@ -35,14 +35,14 @@ input MakeReservationInput {
 }
 
 type Mutation {
+  """Allows a ADMIN to create a slot on a day on the system. """
+  CreateSlot(input: CreateSlotInput!): Slot
+
   """Allows a ADMIN to create a space for a company """
   CreateSpace(input: CreateSpaceInput!): Space
 
   """Allows a CLIENT to reserve a spot on a slot"""
   MakeReservation(input: MakeReservationInput!): Ticket
-
-  """Allows a ADMIN to create a slot on a day on the system. """
-  createSlot(input: CreateSlotInput!): Slot
 
   """Login a user"""
   loginUser(input: LoginUserInput!): LoginUserResult

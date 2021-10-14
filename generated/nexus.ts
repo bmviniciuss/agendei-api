@@ -126,9 +126,9 @@ export interface NexusGenFieldTypes {
     user: NexusGenRootTypes['User']; // User!
   }
   Mutation: { // field return type
+    CreateSlot: NexusGenRootTypes['Slot'] | null; // Slot
     CreateSpace: NexusGenRootTypes['Space'] | null; // Space
     MakeReservation: NexusGenRootTypes['Ticket'] | null; // Ticket
-    createSlot: NexusGenRootTypes['Slot'] | null; // Slot
     loginUser: NexusGenRootTypes['LoginUserResult'] | null; // LoginUserResult
     logoutUser: boolean | null; // Boolean
     registerUser: NexusGenRootTypes['User'] | null; // User
@@ -183,9 +183,9 @@ export interface NexusGenFieldTypeNames {
     user: 'User'
   }
   Mutation: { // field return type name
+    CreateSlot: 'Slot'
     CreateSpace: 'Space'
     MakeReservation: 'Ticket'
-    createSlot: 'Slot'
     loginUser: 'LoginUserResult'
     logoutUser: 'Boolean'
     registerUser: 'User'
@@ -236,14 +236,14 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    CreateSlot: { // args
+      input: NexusGenInputs['CreateSlotInput']; // CreateSlotInput!
+    }
     CreateSpace: { // args
       input: NexusGenInputs['CreateSpaceInput']; // CreateSpaceInput!
     }
     MakeReservation: { // args
       input: NexusGenInputs['MakeReservationInput']; // MakeReservationInput!
-    }
-    createSlot: { // args
-      input: NexusGenInputs['CreateSlotInput']; // CreateSlotInput!
     }
     loginUser: { // args
       input: NexusGenInputs['LoginUserInput']; // LoginUserInput!
