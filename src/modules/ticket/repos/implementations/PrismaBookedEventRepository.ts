@@ -1,10 +1,10 @@
-import { EventTypeEnum, PrismaClient } from '.prisma/client'
+import { EventTypeEnum, PrismaClient, TicketStatus } from '.prisma/client'
 
 import omit from 'lodash/omit'
 
-import { EventBookedWithDetailsAndTickets, FindOrCreateBookedEvent, FindOrCreateBookedEventDTO } from '../BookedEventRepository'
+import { EventBookedWithDetailsAndTickets, FindBookedEventWithActiveTickets, FindBookedEventWithActiveTicketsRepository, FindOrCreateBookedEvent, FindOrCreateBookedEventDTO } from '../BookedEventRepository'
 
-export class PrismaBookedEventRepository implements FindOrCreateBookedEvent {
+export class PrismaBookedEventRepository implements FindOrCreateBookedEvent, FindBookedEventWithActiveTicketsRepository {
   constructor (private readonly prisma: PrismaClient) {}
 
   async findOrCreateBookedEvent (data: FindOrCreateBookedEventDTO): Promise<EventBookedWithDetailsAndTickets> {
@@ -40,6 +40,24 @@ export class PrismaBookedEventRepository implements FindOrCreateBookedEvent {
         eventDetails: {
           select: {
             slots: true
+          }
+        }
+      }
+    })
+  }
+
+  async findBookedEventWithActiveTickets (id: string): Promise<FindBookedEventWithActiveTickets> {
+    return this.prisma.eventBooked.findUnique({
+      where: {
+        id
+      },
+      include: {
+        eventDetails: true,
+        tickets: {
+          where: {
+            status: {
+              notIn: [TicketStatus.CANCELED]
+            }
           }
         }
       }

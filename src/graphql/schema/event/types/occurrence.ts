@@ -1,6 +1,7 @@
-import { EventTypeEnum, TicketStatus } from '@prisma/client'
 import { objectType } from 'nexus'
 
+import { GetAvailableSlotsUseCase } from '../../../../modules/event/use-cases/get-available-slots/GetAvailableSlotsUseCase'
+import { PrismaBookedEventRepository } from '../../../../modules/ticket/repos/implementations/PrismaBookedEventRepository'
 import { Context } from '../../../../shared/infra/graphql/setupGraphql'
 import { EventTypeEnumNexus } from './event'
 
@@ -15,27 +16,13 @@ export const OccurenceType = objectType({
     t.int('slots')
     t.int('availableSlots', {
       async resolve (root, _args, { prisma }: Context) {
-        if (root.type === EventTypeEnum.OCCURRENCE) return root.slots || null
-        if (root.type === EventTypeEnum.BOOKED) {
-          const bookedEvent = await prisma.eventBooked.findUnique({
-            where: {
-              id: root.id
-            },
-            include: {
-              eventDetails: true,
-              tickets: {
-                where: {
-                  status: {
-                    notIn: [TicketStatus.CANCELED]
-                  }
-                }
-              }
-            }
-          })
-          if (!bookedEvent) return null
-          return bookedEvent.eventDetails.slots - bookedEvent.tickets.length
-        }
-        return null
+        const bookedEventRepo = new PrismaBookedEventRepository(prisma)
+        const useCase = new GetAvailableSlotsUseCase(bookedEventRepo)
+        return useCase.execute({
+          bookedEventId: root.id,
+          eventType: root.type,
+          root: root
+        })
       }
     })
     t.nonNull.field('type', { type: EventTypeEnumNexus })
