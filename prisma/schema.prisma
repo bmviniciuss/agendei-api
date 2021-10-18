@@ -101,36 +101,26 @@ enum EventTypeEnum {
 
 model EventBooked {
   id String @id @default(uuid())
-
-  event   Event  @relation(fields: [eventId], references: [id])
-  eventId String
-
+  parent   Event  @relation(fields: [parentId], references: [id])
+  parentId String
   eventDetails   EventDetails @relation(fields: [eventDetailsId], references: [id])
   eventDetailsId String
-
   date DateTime
-
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
   tickets Ticket[]
-
-  @@unique([eventId, date])
+  @@unique([parentId, date])
 }
 
 model Ticket {
   id     String       @id @default(uuid())
   status TicketStatus @default(RESERVED)
-
   user   User   @relation(fields: [userId], references: [id])
   userId String
-
   bookedEvent   EventBooked @relation(fields: [bookedEventId], references: [id])
   bookedEventId String
-
   active Boolean @default(true)
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

@@ -26,15 +26,15 @@ export const MakeReservationInput = inputObjectType({
 async function findOrCreateBookedEvent (prisma: PrismaClient, event:EventWithDetails, parentId: string, date: any) {
   return prisma.eventBooked.upsert({
     where: {
-      eventId_date: {
-        eventId: parentId,
+      parentId_date: {
+        parentId,
         date
       }
     },
     update: {},
     create: {
       date,
-      event: {
+      parent: {
         connect: {
           id: parentId
         }
@@ -120,7 +120,7 @@ export const MakeReservationMutation = mutationField('MakeReservation', {
             in: ticketStatusFilter
           },
           bookedEvent: {
-            event: {
+            parent: {
               space: {
                 id: event.space.id
               }
