@@ -1,14 +1,65 @@
+import { EventTypeEnum, PrismaClient, RuleSetTypeEnum, Ticket, TicketStatus } from '.prisma/client'
+
+import startOfDay from 'date-fns/startOfDay'
+import endOfDay from 'date-fns/endOfDay'
+import startOfISOWeek from 'date-fns/startOfISOWeek'
+import endOfISOWeek from 'date-fns/endOfISOWeek'
+import startOfMonth from 'date-fns/startOfMonth'
+import endOfMonth from 'date-fns/endOfMonth'
+import omit from 'lodash/omit'
 import { mutationField, inputObjectType, nonNull, arg } from 'nexus'
 
 import { Context } from '../../../../shared/infra/graphql/setupGraphql'
 import { TicketNexus } from '../../ticket/types/ticket'
+import { EventWithDetails } from '../../../../types'
 
 export const MakeReservationInput = inputObjectType({
   name: 'MakeReservationInput',
   definition (t) {
-    t.nonNull.id('slotId')
+    t.nonNull.id('parentId')
+    t.nonNull.field('date', {
+      type: 'DateTime'
+    })
   }
 })
+
+async function findOrCreateBookedEvent (prisma: PrismaClient, event:EventWithDetails, parentId: string, date: any) {
+  return prisma.eventBooked.upsert({
+    where: {
+      eventId_date: {
+        eventId: parentId,
+        date
+      }
+    },
+    update: {},
+    create: {
+      date,
+      event: {
+        connect: {
+          id: parentId
+        }
+      },
+      eventDetails: {
+        create: {
+          ...omit(event.eventDetails, 'id', 'createdAt', 'updatedAt'),
+          type: EventTypeEnum.BOOKED
+        }
+      }
+    },
+    include: {
+      tickets: {
+        select: {
+          status: true
+        }
+      },
+      eventDetails: {
+        select: {
+          slots: true
+        }
+      }
+    }
+  })
+}
 
 export const MakeReservationMutation = mutationField('MakeReservation', {
   description: 'Allows a CLIENT to reserve a spot on a slot',
@@ -20,95 +71,101 @@ export const MakeReservationMutation = mutationField('MakeReservation', {
   },
 
   async resolve (_, { input }, { currentUser, prisma }: Context) {
-    return null
-    // const { slotId } = input
-    // const ticketStatusFilter = [TicketStatus.RESERVED, TicketStatus.USED]
+    if (!currentUser) throw new Error('Usuário precisa estar logado')
 
-    // // Get slot and associated space
-    // const slot = await prisma.slot.findFirst({
-    //   where: {
-    //     id: slotId
-    //   },
-    //   include: {
-    //     space: {
-    //       include: {
-    //         ruleSet: true
-    //       }
-    //     }
-    //   }
-    // })
+    const ticketStatusFilter = [TicketStatus.RESERVED, TicketStatus.USED]
 
-    // if (!slot) throw new Error('Slot não existe')
+    const { parentId, date } = input
+    console.log('INPUT: ', input)
 
-    // const hasUserAlredyReservedThisSlot = await prisma.ticket.findFirst({
-    //   where: {
-    //     slotId: input.slotId,
-    //     userId: currentUser!.id
-    //   }
-    // })
+    const event = await prisma.event.findUnique({
+      where: {
+        id: parentId
+      },
+      include: {
+        eventDetails: true,
+        space: {
+          include: {
+            ruleSet: {
+              select: {
+                type: true,
+                limit: true
+              }
+            }
+          }
+        }
+      }
+    })
 
-    // if (hasUserAlredyReservedThisSlot) throw new Error('O usuário já tem um ticket desse slot')
+    if (!event) throw new Error('Evento pai não encontrado.')
 
-    // // Pegar tickets reservados, pois ja usados quer dizer que o ex
-    // const slotTicketsCount = await prisma.ticket.count({
-    //   where: {
-    //     slotId: input.slotId,
-    //     status: {
-    //       in: ticketStatusFilter
-    //     }
-    //   }
-    // })
+    if (event.space.ruleSet) {
+      const { ruleSet: spaceRuleSet } = event.space
+      const dateToValidate = input.date
+      const verificationRangeSlot = (() => {
+        switch (spaceRuleSet.type) {
+          case RuleSetTypeEnum.DAILY:
+            return [startOfDay(dateToValidate), endOfDay(dateToValidate)]
+          case RuleSetTypeEnum.WEEKLY:
+            return [startOfISOWeek(dateToValidate), endOfISOWeek(dateToValidate)]
+          case RuleSetTypeEnum.MONTHLY:
+            return [startOfMonth(dateToValidate), endOfMonth(dateToValidate)]
+        }
+      })()
 
-    // if (slotTicketsCount + 1 > slot.numberOfClientsLimit) {
-    //   throw new Error('Slot já está cheio')
-    // }
+      const usersTicketFromDateRangeCount = await prisma.ticket.count({
+        where: {
+          userId: currentUser.id,
+          status: {
+            in: ticketStatusFilter
+          },
+          bookedEvent: {
+            event: {
+              space: {
+                id: event.space.id
+              }
+            },
+            date: {
+              gte: verificationRangeSlot[0],
+              lte: verificationRangeSlot[1]
+            }
+          }
+        }
+      })
 
-    // // se tenho rule set, vou verificar se posso criar o ticket
-    // if (slot?.space?.ruleSet) {
-    //   const { type, limit } = slot.space.ruleSet
-    //   const { startTime: slotStartTime } = slot
-    //   const verificationRangeSlot = (() => {
-    //     switch (type) {
-    //       case RuleSetTypeEnum.DAILY:
-    //         return [startOfDay(slotStartTime), endOfDay(slotStartTime)]
-    //       case RuleSetTypeEnum.WEEKLY:
-    //         return [startOfISOWeek(slotStartTime), endOfISOWeek(slotStartTime)]
-    //       case RuleSetTypeEnum.MONTHLY:
-    //         return [startOfMonth(slotStartTime), endOfMonth(slotStartTime)]
-    //     }
-    //   })()
-    //   const usersTicketFromRangeCount = await prisma.ticket.count({
-    //     where: {
-    //       userId: currentUser?.id,
-    //       status: {
-    //         in: ticketStatusFilter
-    //       },
-    //       slot: {
-    //         startTime: {
-    //           gte: verificationRangeSlot[0],
-    //           lte: verificationRangeSlot[1]
-    //         }
-    //       }
-    //     }
-    //   })
+      if (usersTicketFromDateRangeCount + 1 > spaceRuleSet.limit) {
+        throw new Error('Você chegou no limite de tickets')
+      }
+    }
+    // @ts-ignore
+    return await prisma.$transaction(async (prismaT: PrismaClient) => {
+      /**
+       * If date (event occurrence created on the database)
+       * doest not exists, creating one (find or create)
+       */
+      const bookedEvent = await findOrCreateBookedEvent(prismaT, event, parentId, date)
+      const bookedEventsTicketsCount = bookedEvent.tickets.filter(({ status }) => {
+        return status !== TicketStatus.CANCELED
+      }).length
 
-    //   if (usersTicketFromRangeCount + 1 > limit) throw new Error('Você chegou no limite de tickets')
-    // }
+      if (bookedEventsTicketsCount + 1 > bookedEvent.eventDetails.slots) {
+        throw new Error('Evento já está cheio')
+      }
 
-    // return prisma.ticket.create({
-    //   data: {
-    //     status: TicketStatus.RESERVED,
-    //     user: {
-    //       connect: {
-    //         id: currentUser!.id
-    //       }
-    //     },
-    //     slot: {
-    //       connect: {
-    //         id: input.slotId
-    //       }
-    //     }
-    //   }
-    // })
+      return prismaT.ticket.create({
+        data: {
+          user: {
+            connect: {
+              id: currentUser.id
+            }
+          },
+          bookedEvent: {
+            connect: {
+              id: bookedEvent.id
+            }
+          }
+        }
+      })
+    }) as Ticket
   }
 })

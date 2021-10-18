@@ -61,6 +61,11 @@ enum EventTypeEnum {
   OCCURRENCE
 }
 
+input GetOccurrencesInput {
+  endTime: DateTime!
+  startTime: DateTime!
+}
+
 input LoginUserInput {
   email: String!
   password: String!
@@ -72,7 +77,8 @@ type LoginUserResult {
 }
 
 input MakeReservationInput {
-  slotId: ID!
+  date: DateTime!
+  parentId: ID!
 }
 
 type Mutation {
@@ -95,7 +101,25 @@ type Mutation {
   registerUser(input: RegisterUserInput!): User
 }
 
+type Occurence {
+  active: Boolean
+  availableSlots: Int
+  createdAt: DateTime
+  date: DateTime!
+  description: String
+  duration: Float
+  id: ID!
+  parentId: ID!
+  slots: Int
+  title: String
+  type: EventTypeEnum!
+  updatedAt: DateTime
+}
+
 type Query {
+  """Get occurences"""
+  GetOccurences(input: GetOccurrencesInput!): [Occurence!]
+
   """Get all spaces"""
   GetSpaces: [Space!]
 
