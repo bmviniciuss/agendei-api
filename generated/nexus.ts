@@ -28,11 +28,16 @@ declare global {
 }
 
 export interface NexusGenInputs {
-  CreateSlotInput: { // input type
-    endTime: NexusGenScalars['DateTime']; // DateTime!
-    numberOfClientsLimit: number; // Int!
+  CreateEventInput: { // input type
+    eventDetails: NexusGenInputs['CreateEvent_EventDetailsInput']; // CreateEvent_EventDetailsInput!
+    rule: string; // String!
     spaceId: string; // ID!
-    startTime: NexusGenScalars['DateTime']; // DateTime!
+  }
+  CreateEvent_EventDetailsInput: { // input type
+    description: string; // String!
+    duration: number; // Float!
+    slots: number; // Int!
+    title: string; // String!
   }
   CreateSpaceInput: { // input type
     clientsPerSlot: number; // Int!
@@ -44,12 +49,17 @@ export interface NexusGenInputs {
     limit: number; // Int!
     type: NexusGenEnums['RuleSetTypeEnum']; // RuleSetTypeEnum!
   }
+  GetOccurrencesInput: { // input type
+    endTime: NexusGenScalars['DateTime']; // DateTime!
+    startTime: NexusGenScalars['DateTime']; // DateTime!
+  }
   LoginUserInput: { // input type
     email: string; // String!
     password: string; // String!
   }
   MakeReservationInput: { // input type
-    slotId: string; // ID!
+    date: NexusGenScalars['DateTime']; // DateTime!
+    parentId: string; // ID!
   }
   RegisterUserInput: { // input type
     email: string; // String!
@@ -60,6 +70,7 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
+  EventTypeEnum: "BOOKED" | "CANCELED" | "EVENT" | "EXCEPTION" | "OCCURRENCE"
   RuleSetTypeEnum: "DAILY" | "MONTHLY" | "WEEKLY"
   TicketStatus: "CANCELED" | "RESERVED" | "USED"
   UserType: "ADMIN" | "CLIENT"
@@ -75,21 +86,43 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  Event: { // root type
+    active?: boolean | null; // Boolean
+    createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    id: string; // ID!
+    rule: string; // String!
+    updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
+  }
+  EventDetails: { // root type
+    active?: boolean | null; // Boolean
+    createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    description?: string | null; // String
+    duration?: number | null; // Float
+    id: string; // ID!
+    slots?: number | null; // Int
+    title?: string | null; // String
+    type: NexusGenEnums['EventTypeEnum']; // EventTypeEnum!
+    updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
+  }
   LoginUserResult: { // root type
     accessToken: string; // String!
     user: NexusGenRootTypes['User']; // User!
   }
   Mutation: {};
-  Query: {};
-  Slot: { // root type
-    active: boolean; // Boolean!
-    createdAt: NexusGenScalars['DateTime']; // DateTime!
-    endTime: NexusGenScalars['DateTime']; // DateTime!
+  Occurence: { // root type
+    active?: boolean | null; // Boolean
+    createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    date: NexusGenScalars['DateTime']; // DateTime!
+    description?: string | null; // String
+    duration?: number | null; // Float
     id: string; // ID!
-    numberOfClientsLimit: number; // Int!
-    startTime: NexusGenScalars['DateTime']; // DateTime!
-    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    parentId: string; // ID!
+    slots?: number | null; // Int
+    title?: string | null; // String
+    type: NexusGenEnums['EventTypeEnum']; // EventTypeEnum!
+    updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
   }
+  Query: {};
   Space: { // root type
     active: boolean; // Boolean!
     clientsPerSlot: number; // Int!
@@ -136,43 +169,65 @@ export type NexusGenRootTypes = NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
+  Event: { // field return type
+    active: boolean | null; // Boolean
+    createdAt: NexusGenScalars['DateTime'] | null; // DateTime
+    eventDetails: NexusGenRootTypes['EventDetails'] | null; // EventDetails
+    id: string; // ID!
+    rule: string; // String!
+    updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
+  }
+  EventDetails: { // field return type
+    active: boolean | null; // Boolean
+    createdAt: NexusGenScalars['DateTime'] | null; // DateTime
+    description: string | null; // String
+    duration: number | null; // Float
+    id: string; // ID!
+    slots: number | null; // Int
+    title: string | null; // String
+    type: NexusGenEnums['EventTypeEnum']; // EventTypeEnum!
+    updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
+  }
   LoginUserResult: { // field return type
     accessToken: string; // String!
     user: NexusGenRootTypes['User']; // User!
   }
   Mutation: { // field return type
-    CreateSlot: NexusGenRootTypes['Slot'] | null; // Slot
+    CreateEvent: NexusGenRootTypes['Event'] | null; // Event
     CreateSpace: NexusGenRootTypes['Space'] | null; // Space
     MakeReservation: NexusGenRootTypes['Ticket'] | null; // Ticket
     loginUser: NexusGenRootTypes['LoginUserResult'] | null; // LoginUserResult
     logoutUser: boolean | null; // Boolean
     registerUser: NexusGenRootTypes['User'] | null; // User
   }
+  Occurence: { // field return type
+    active: boolean | null; // Boolean
+    availableSlots: number | null; // Int
+    createdAt: NexusGenScalars['DateTime'] | null; // DateTime
+    date: NexusGenScalars['DateTime']; // DateTime!
+    description: string | null; // String
+    duration: number | null; // Float
+    id: string; // ID!
+    parentId: string; // ID!
+    slots: number | null; // Int
+    title: string | null; // String
+    type: NexusGenEnums['EventTypeEnum']; // EventTypeEnum!
+    updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
+  }
   Query: { // field return type
-    GetSlot: NexusGenRootTypes['Slot'] | null; // Slot
+    GetOccurences: NexusGenRootTypes['Occurence'][] | null; // [Occurence!]
     GetSpaces: NexusGenRootTypes['Space'][] | null; // [Space!]
     me: NexusGenRootTypes['User'] | null; // User
-  }
-  Slot: { // field return type
-    active: boolean; // Boolean!
-    activeTicketsCount: number; // Int!
-    createdAt: NexusGenScalars['DateTime']; // DateTime!
-    endTime: NexusGenScalars['DateTime']; // DateTime!
-    id: string; // ID!
-    numberOfClientsLimit: number; // Int!
-    startTime: NexusGenScalars['DateTime']; // DateTime!
-    tickets: Array<NexusGenRootTypes['Ticket'] | null>; // [Ticket]!
-    updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   Space: { // field return type
     active: boolean; // Boolean!
     clientsPerSlot: number; // Int!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     description: string; // String!
+    events: NexusGenRootTypes['Event'][] | null; // [Event!]
     id: string; // ID!
     name: string; // String!
     ruleSet: NexusGenRootTypes['SpaceRuleSet'] | null; // SpaceRuleSet
-    slots: NexusGenRootTypes['Slot'][] | null; // [Slot!]
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   SpaceRuleSet: { // field return type
@@ -203,43 +258,65 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
+  Event: { // field return type name
+    active: 'Boolean'
+    createdAt: 'DateTime'
+    eventDetails: 'EventDetails'
+    id: 'ID'
+    rule: 'String'
+    updatedAt: 'DateTime'
+  }
+  EventDetails: { // field return type name
+    active: 'Boolean'
+    createdAt: 'DateTime'
+    description: 'String'
+    duration: 'Float'
+    id: 'ID'
+    slots: 'Int'
+    title: 'String'
+    type: 'EventTypeEnum'
+    updatedAt: 'DateTime'
+  }
   LoginUserResult: { // field return type name
     accessToken: 'String'
     user: 'User'
   }
   Mutation: { // field return type name
-    CreateSlot: 'Slot'
+    CreateEvent: 'Event'
     CreateSpace: 'Space'
     MakeReservation: 'Ticket'
     loginUser: 'LoginUserResult'
     logoutUser: 'Boolean'
     registerUser: 'User'
   }
+  Occurence: { // field return type name
+    active: 'Boolean'
+    availableSlots: 'Int'
+    createdAt: 'DateTime'
+    date: 'DateTime'
+    description: 'String'
+    duration: 'Float'
+    id: 'ID'
+    parentId: 'ID'
+    slots: 'Int'
+    title: 'String'
+    type: 'EventTypeEnum'
+    updatedAt: 'DateTime'
+  }
   Query: { // field return type name
-    GetSlot: 'Slot'
+    GetOccurences: 'Occurence'
     GetSpaces: 'Space'
     me: 'User'
-  }
-  Slot: { // field return type name
-    active: 'Boolean'
-    activeTicketsCount: 'Int'
-    createdAt: 'DateTime'
-    endTime: 'DateTime'
-    id: 'ID'
-    numberOfClientsLimit: 'Int'
-    startTime: 'DateTime'
-    tickets: 'Ticket'
-    updatedAt: 'DateTime'
   }
   Space: { // field return type name
     active: 'Boolean'
     clientsPerSlot: 'Int'
     createdAt: 'DateTime'
     description: 'String'
+    events: 'Event'
     id: 'ID'
     name: 'String'
     ruleSet: 'SpaceRuleSet'
-    slots: 'Slot'
     updatedAt: 'DateTime'
   }
   SpaceRuleSet: { // field return type name
@@ -271,8 +348,8 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
-    CreateSlot: { // args
-      input: NexusGenInputs['CreateSlotInput']; // CreateSlotInput!
+    CreateEvent: { // args
+      input: NexusGenInputs['CreateEventInput']; // CreateEventInput!
     }
     CreateSpace: { // args
       input: NexusGenInputs['CreateSpaceInput']; // CreateSpaceInput!
@@ -288,8 +365,8 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
-    GetSlot: { // args
-      id: string; // ID!
+    GetOccurences: { // args
+      input: NexusGenInputs['GetOccurrencesInput']; // GetOccurrencesInput!
     }
   }
 }

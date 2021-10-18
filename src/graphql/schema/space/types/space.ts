@@ -1,7 +1,7 @@
-import { list, nonNull, objectType } from 'nexus'
+import { objectType, list, nonNull } from 'nexus'
 
 import { Context } from '../../../../shared/infra/graphql/setupGraphql'
-import { SlotNexus } from '../../slot/types'
+import { EventNexus } from '../../event/types/event'
 import { SpaceRuleSetNexus } from './rule-set'
 
 export const SpaceNexus = objectType({
@@ -12,22 +12,24 @@ export const SpaceNexus = objectType({
     t.nonNull.string('description')
     t.nonNull.int('clientsPerSlot')
     t.nonNull.boolean('active')
-    t.field('slots', {
-      type: list(nonNull(SlotNexus)),
-      async resolve (root, _args, { prisma }: Context) {
-        return prisma.slot.findMany({
-          where: {
-            spaceId: root.id
-          }
-        })
-      }
-    })
     t.field('ruleSet', {
       type: SpaceRuleSetNexus,
       async resolve (root, _args, { prisma }:Context) {
         return prisma.spaceRuleSet.findUnique({
           where: {
             spaceId: root.id
+          }
+        })
+      }
+    })
+    t.field('events', {
+      type: list(nonNull(EventNexus)),
+      async resolve (root, _args, { prisma }:Context) {
+        return prisma.event.findMany({
+          where: {
+            space: {
+              id: root.id
+            }
           }
         })
       }

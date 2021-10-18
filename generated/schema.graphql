@@ -2,11 +2,17 @@
 ### Do not make changes to this file directly
 
 
-input CreateSlotInput {
-  endTime: DateTime!
-  numberOfClientsLimit: Int!
+input CreateEventInput {
+  eventDetails: CreateEvent_EventDetailsInput!
+  rule: String!
   spaceId: ID!
-  startTime: DateTime!
+}
+
+input CreateEvent_EventDetailsInput {
+  description: String!
+  duration: Float!
+  slots: Int!
+  title: String!
 }
 
 input CreateSpaceInput {
@@ -26,6 +32,40 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 """
 scalar DateTime
 
+type Event {
+  active: Boolean
+  createdAt: DateTime
+  eventDetails: EventDetails
+  id: ID!
+  rule: String!
+  updatedAt: DateTime
+}
+
+type EventDetails {
+  active: Boolean
+  createdAt: DateTime
+  description: String
+  duration: Float
+  id: ID!
+  slots: Int
+  title: String
+  type: EventTypeEnum!
+  updatedAt: DateTime
+}
+
+enum EventTypeEnum {
+  BOOKED
+  CANCELED
+  EVENT
+  EXCEPTION
+  OCCURRENCE
+}
+
+input GetOccurrencesInput {
+  endTime: DateTime!
+  startTime: DateTime!
+}
+
 input LoginUserInput {
   email: String!
   password: String!
@@ -37,12 +77,13 @@ type LoginUserResult {
 }
 
 input MakeReservationInput {
-  slotId: ID!
+  date: DateTime!
+  parentId: ID!
 }
 
 type Mutation {
-  """Allows a ADMIN to create a slot on a day on the system. """
-  CreateSlot(input: CreateSlotInput!): Slot
+  """Allows a ADMIN to create a event for a space"""
+  CreateEvent(input: CreateEventInput!): Event
 
   """Allows a ADMIN to create a space for a company """
   CreateSpace(input: CreateSpaceInput!): Space
@@ -60,9 +101,24 @@ type Mutation {
   registerUser(input: RegisterUserInput!): User
 }
 
+type Occurence {
+  active: Boolean
+  availableSlots: Int
+  createdAt: DateTime
+  date: DateTime!
+  description: String
+  duration: Float
+  id: ID!
+  parentId: ID!
+  slots: Int
+  title: String
+  type: EventTypeEnum!
+  updatedAt: DateTime
+}
+
 type Query {
-  """."""
-  GetSlot(id: ID!): Slot
+  """Get occurences"""
+  GetOccurences(input: GetOccurrencesInput!): [Occurence!]
 
   """Get all spaces"""
   GetSpaces: [Space!]
@@ -84,27 +140,15 @@ enum RuleSetTypeEnum {
   WEEKLY
 }
 
-type Slot {
-  active: Boolean!
-  activeTicketsCount: Int!
-  createdAt: DateTime!
-  endTime: DateTime!
-  id: ID!
-  numberOfClientsLimit: Int!
-  startTime: DateTime!
-  tickets: [Ticket]!
-  updatedAt: DateTime!
-}
-
 type Space {
   active: Boolean!
   clientsPerSlot: Int!
   createdAt: DateTime!
   description: String!
+  events: [Event!]
   id: ID!
   name: String!
   ruleSet: SpaceRuleSet
-  slots: [Slot!]
   updatedAt: DateTime!
 }
 
