@@ -58,7 +58,7 @@ export class GetOccurrencesUseCase implements UseCase<GetOccurrencesDTO, GetOccu
     return event.eventsBooked.map(bookedEvent => ({
       ...this._mapEventDetails(bookedEvent),
       id: bookedEvent.id,
-      parentId: event.id,
+      parentId: bookedEvent.parentId,
       type: EventTypeEnum.BOOKED,
       date: bookedEvent.date.toISOString()
     }))
