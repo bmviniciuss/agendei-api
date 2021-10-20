@@ -97,17 +97,17 @@ type Mutation {
   """Allows a ADMIN to create a space for a company """
   CreateSpace(input: CreateSpaceInput!): Space
 
+  """Login a user"""
+  LoginUser(input: LoginUserInput!): LoginUserResult
+
+  """Logout user"""
+  LogoutUser: Boolean
+
   """Allows a CLIENT to reserve a spot on a slot"""
   MakeReservation(input: MakeReservationInput!): Ticket
 
-  """Login a user"""
-  loginUser(input: LoginUserInput!): LoginUserResult
-
-  """Logout user"""
-  logoutUser: Boolean
-
   """Registers a user"""
-  registerUser(input: RegisterUserInput!): User
+  RegisterUser(input: RegisterUserInput!): User
 }
 
 type Occurence {

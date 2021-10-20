@@ -23,7 +23,7 @@ export const LoginUserResult = objectType({
   }
 })
 
-export const LoginUserMutation = mutationField('loginUser', {
+export const LoginUserMutation = mutationField('LoginUser', {
   description: 'Login a user',
   type: LoginUserResult,
   args: {

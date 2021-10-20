@@ -212,10 +212,10 @@ export interface NexusGenFieldTypes {
   Mutation: { // field return type
     CreateEvent: NexusGenRootTypes['Event'] | null; // Event
     CreateSpace: NexusGenRootTypes['Space'] | null; // Space
+    LoginUser: NexusGenRootTypes['LoginUserResult'] | null; // LoginUserResult
+    LogoutUser: boolean | null; // Boolean
     MakeReservation: NexusGenRootTypes['Ticket'] | null; // Ticket
-    loginUser: NexusGenRootTypes['LoginUserResult'] | null; // LoginUserResult
-    logoutUser: boolean | null; // Boolean
-    registerUser: NexusGenRootTypes['User'] | null; // User
+    RegisterUser: NexusGenRootTypes['User'] | null; // User
   }
   Occurence: { // field return type
     active: boolean | null; // Boolean
@@ -311,10 +311,10 @@ export interface NexusGenFieldTypeNames {
   Mutation: { // field return type name
     CreateEvent: 'Event'
     CreateSpace: 'Space'
+    LoginUser: 'LoginUserResult'
+    LogoutUser: 'Boolean'
     MakeReservation: 'Ticket'
-    loginUser: 'LoginUserResult'
-    logoutUser: 'Boolean'
-    registerUser: 'User'
+    RegisterUser: 'User'
   }
   Occurence: { // field return type name
     active: 'Boolean'
@@ -383,13 +383,13 @@ export interface NexusGenArgTypes {
     CreateSpace: { // args
       input: NexusGenInputs['CreateSpaceInput']; // CreateSpaceInput!
     }
+    LoginUser: { // args
+      input: NexusGenInputs['LoginUserInput']; // LoginUserInput!
+    }
     MakeReservation: { // args
       input: NexusGenInputs['MakeReservationInput']; // MakeReservationInput!
     }
-    loginUser: { // args
-      input: NexusGenInputs['LoginUserInput']; // LoginUserInput!
-    }
-    registerUser: { // args
+    RegisterUser: { // args
       input: NexusGenInputs['RegisterUserInput']; // RegisterUserInput!
     }
   }
