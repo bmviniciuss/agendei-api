@@ -2,14 +2,20 @@ import { EventTypeEnum, PrismaClient, TicketStatus } from '.prisma/client'
 
 import omit from 'lodash/omit'
 
-import { EventBookedWithDetailsAndTickets, FindBookedEventWithActiveTickets, FindBookedEventWithActiveTicketsRepository, FindOrCreateBookedEvent, FindOrCreateBookedEventDTO } from '../BookedEventRepository'
+import {
+  EventInstanceWithSlotsAndTicketsStatus,
+  EventInstanceWithDetailsAndTickets,
+  FindBookedEventWithActiveTicketsRepository,
+  FindOrCreateBookedEvent,
+  FindOrCreateBookedEventDTO
+} from '../EventInstanceRepository'
 
-export class PrismaBookedEventRepository implements FindOrCreateBookedEvent, FindBookedEventWithActiveTicketsRepository {
+export class PrismaEventInstanceRepository implements FindOrCreateBookedEvent, FindBookedEventWithActiveTicketsRepository {
   constructor (private readonly prisma: PrismaClient) {}
 
-  async findOrCreateBookedEvent (data: FindOrCreateBookedEventDTO): Promise<EventBookedWithDetailsAndTickets> {
+  async findOrCreateBookedEvent (data: FindOrCreateBookedEventDTO): Promise<EventInstanceWithSlotsAndTicketsStatus> {
     const { parentId, date, eventDetails } = data
-    return this.prisma.eventBooked.upsert({
+    return this.prisma.eventInstance.upsert({
       where: {
         parentId_date: {
           parentId,
@@ -32,22 +38,22 @@ export class PrismaBookedEventRepository implements FindOrCreateBookedEvent, Fin
         }
       },
       include: {
-        tickets: {
-          select: {
-            status: true
-          }
-        },
         eventDetails: {
           select: {
             slots: true
+          }
+        },
+        tickets: {
+          select: {
+            status: true
           }
         }
       }
     })
   }
 
-  async findBookedEventWithActiveTickets (id: string): Promise<FindBookedEventWithActiveTickets> {
-    return this.prisma.eventBooked.findUnique({
+  async findBookedEventWithActiveTickets (id: string): Promise<EventInstanceWithDetailsAndTickets> {
+    return this.prisma.eventInstance.findUnique({
       where: {
         id
       },

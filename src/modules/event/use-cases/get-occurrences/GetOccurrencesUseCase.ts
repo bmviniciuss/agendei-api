@@ -33,8 +33,8 @@ export class GetOccurrencesUseCase implements UseCase<GetOccurrencesDTO, GetOccu
     rruleSet.rrule(rrule)
 
     // removing events instances from occurences (virtual objects), because its a instace on database
-    event.eventsInstances.forEach(({ parentDate }) => {
-      rruleSet.exdate(parentDate)
+    event.eventsInstances.forEach(({ date }) => {
+      rruleSet.exdate(date)
     })
 
     const occurencesDates = rruleSet.between(range.startTime, range.endTime)

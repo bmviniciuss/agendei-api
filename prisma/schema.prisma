@@ -108,26 +108,25 @@ model EventBooked {
   active         Boolean      @default(true)
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
-  tickets        Ticket[]
 
   @@unique([parentId, date])
 }
 
 model EventInstance {
-  id             String               @id @default(uuid())
-  parent         Event                @relation(fields: [parentId], references: [id])
-  parentId       String
-  parentDate     DateTime
-  date           DateTime
-  eventDetails   EventDetails         @relation(fields: [eventDetailsId], references: [id])
-  eventDetailsId String               @unique
-  type           EventInstaceTypeEnum @default(BOOKING)
-  tickets        Ticket[]
-  isCanceled     Boolean              @default(false)
-  isRescheduled  Boolean              @default(false)
-  active         Boolean              @default(true)
-  createdAt      DateTime             @default(now())
-  updatedAt      DateTime             @updatedAt
+  id              String               @id @default(uuid())
+  parent          Event                @relation(fields: [parentId], references: [id])
+  parentId        String
+  date            DateTime
+  rescheduledDate DateTime?
+  eventDetails    EventDetails         @relation(fields: [eventDetailsId], references: [id])
+  eventDetailsId  String               @unique
+  type            EventInstaceTypeEnum @default(BOOKING)
+  tickets         Ticket[]
+  isCanceled      Boolean              @default(false)
+  isRescheduled   Boolean              @default(false)
+  active          Boolean              @default(true)
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
 
   @@unique([parentId, date])
 }
@@ -143,8 +142,6 @@ model Ticket {
   status          TicketStatus  @default(RESERVED)
   user            User          @relation(fields: [userId], references: [id])
   userId          String
-  bookedEvent     EventBooked   @relation(fields: [bookedEventId], references: [id])
-  bookedEventId   String
   eventInstance   EventInstance @relation(fields: [eventInstanceId], references: [id])
   eventInstanceId String
   active          Boolean       @default(true)

@@ -1,7 +1,7 @@
 import { EventTypeEnum } from '.prisma/client'
 
 import { UseCase } from '../../../../shared/core/UseCase'
-import { FindBookedEventWithActiveTicketsRepository } from '../../../ticket/repos/BookedEventRepository'
+import { FindBookedEventWithActiveTicketsRepository } from '../../../ticket/repos/EventInstanceRepository'
 import { GetAvailableSlotsUseCaseDTO } from './GetAvailableSlotsUseCaseDTO'
 
 export type GetAvailableSlotsUseCaseResult = number | null

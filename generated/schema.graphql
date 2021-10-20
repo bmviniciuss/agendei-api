@@ -110,7 +110,7 @@ type Mutation {
   RegisterUser(input: RegisterUserInput!): User
 }
 
-type Occurence {
+type Occurrence {
   active: Boolean
   availableSlots: Int
   createdAt: DateTime
@@ -127,7 +127,7 @@ type Occurence {
 
 type Query {
   """Get occurences"""
-  GetOccurences(input: GetOccurrencesInput!): [Occurence!]
+  GetOccurences(input: GetOccurrencesInput!): [Occurrence!]
 
   """Get all spaces"""
   GetSpaces: [Space!]

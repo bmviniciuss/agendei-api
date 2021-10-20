@@ -117,7 +117,7 @@ export interface NexusGenObjects {
     user: NexusGenRootTypes['User']; // User!
   }
   Mutation: {};
-  Occurence: { // root type
+  Occurrence: { // root type
     active?: boolean | null; // Boolean
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
     date: NexusGenScalars['DateTime']; // DateTime!
@@ -217,7 +217,7 @@ export interface NexusGenFieldTypes {
     MakeReservation: NexusGenRootTypes['Ticket'] | null; // Ticket
     RegisterUser: NexusGenRootTypes['User'] | null; // User
   }
-  Occurence: { // field return type
+  Occurrence: { // field return type
     active: boolean | null; // Boolean
     availableSlots: number | null; // Int
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
@@ -232,7 +232,7 @@ export interface NexusGenFieldTypes {
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
   }
   Query: { // field return type
-    GetOccurences: NexusGenRootTypes['Occurence'][] | null; // [Occurence!]
+    GetOccurences: NexusGenRootTypes['Occurrence'][] | null; // [Occurrence!]
     GetSpaces: NexusGenRootTypes['Space'][] | null; // [Space!]
     GetUserTickets: NexusGenRootTypes['Ticket'][] | null; // [Ticket!]
     me: NexusGenRootTypes['User'] | null; // User
@@ -316,7 +316,7 @@ export interface NexusGenFieldTypeNames {
     MakeReservation: 'Ticket'
     RegisterUser: 'User'
   }
-  Occurence: { // field return type name
+  Occurrence: { // field return type name
     active: 'Boolean'
     availableSlots: 'Int'
     createdAt: 'DateTime'
@@ -331,7 +331,7 @@ export interface NexusGenFieldTypeNames {
     updatedAt: 'DateTime'
   }
   Query: { // field return type name
-    GetOccurences: 'Occurence'
+    GetOccurences: 'Occurrence'
     GetSpaces: 'Space'
     GetUserTickets: 'Ticket'
     me: 'User'

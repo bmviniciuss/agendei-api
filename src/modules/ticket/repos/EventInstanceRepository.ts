@@ -1,4 +1,6 @@
-import { EventBooked, EventDetails, Ticket, TicketStatus } from '@prisma/client'
+import { EventBooked, EventDetails, EventInstance, Ticket, TicketStatus } from '@prisma/client'
+
+import { TEventWithDetails } from '../../../types'
 
 type EventBookedDetailsSlot = {
   slots: number;
@@ -13,6 +15,15 @@ export type EventBookedWithDetailsAndTickets = EventBooked & {
   tickets: EventBookedTicketsStatus[];
 }
 
+export type EventInstanceWithSlotsAndTicketsStatus = EventInstance & {
+  eventDetails: {
+    slots: EventDetails['slots']
+  }
+  tickets: {
+    status: Ticket['status']
+  }[];
+}
+
 export type FindOrCreateBookedEventDTO = {
   eventDetails: EventDetails
   parentId: string
@@ -23,11 +34,11 @@ export interface FindOrCreateBookedEvent {
   findOrCreateBookedEvent(data: FindOrCreateBookedEventDTO): Promise<EventBookedWithDetailsAndTickets>
 }
 
-export type FindBookedEventWithActiveTickets = (EventBooked & {
+export type EventInstanceWithDetailsAndTickets = (TEventWithDetails<EventInstance> & {
   eventDetails: EventDetails;
   tickets: Ticket[];
 }) | null
 
 export interface FindBookedEventWithActiveTicketsRepository {
-  findBookedEventWithActiveTickets(id: EventBooked['id']): Promise<FindBookedEventWithActiveTickets>
+  findBookedEventWithActiveTickets(id: EventBooked['id']): Promise<EventInstanceWithDetailsAndTickets>
 }

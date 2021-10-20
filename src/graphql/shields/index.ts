@@ -15,11 +15,11 @@ export const shields = shield({
   Mutation: {
     '*': isAuthenticated,
     CreateSpace: authenticatedAdminShield,
-    MakeReservation: authenticatedClientShield,
+    MakeReservation: authenticatedAdminShield,
     RegisterUser: allow,
     LoginUser: allow
   },
-  Occurence: {
+  Occurrence: {
     '*': isAuthenticated,
     availableSlots: authenticatedAdminShield
   }

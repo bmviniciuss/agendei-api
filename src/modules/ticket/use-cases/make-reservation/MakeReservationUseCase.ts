@@ -6,13 +6,14 @@ import startOfISOWeek from 'date-fns/startOfISOWeek'
 import endOfISOWeek from 'date-fns/endOfISOWeek'
 import startOfMonth from 'date-fns/startOfMonth'
 import endOfMonth from 'date-fns/endOfMonth'
+import isBefore from 'date-fns/isBefore'
 
 import { UseCase } from '../../../../shared/core/UseCase'
 import { EventQuery, FindEventByParentId } from '../../../event/repos/EventRepository'
 import { MakeReservationDTO } from './MakeReservationDTO'
 import { MakeReservationErrors } from './MakeReservationErrors'
 import { CountActiveUserTicketsFromSpaceInDateRangeRepository } from '../../repos/TicketRepository'
-import { PrismaBookedEventRepository } from '../../repos/implementations/PrismaBookedEventRepository'
+import { PrismaEventInstanceRepository } from '../../repos/implementations/PrismaEventInstanceRepository'
 import { PrismaTicketRepository } from '../../repos/implementations/PrismaTicketRepository'
 
 export type MakeReservationUseCaseResult = Ticket | null
@@ -26,33 +27,38 @@ export class MakeReservationUseCase implements UseCase<MakeReservationDTO, MakeR
   ) { }
 
   async execute (data: MakeReservationDTO): Promise<MakeReservationUseCaseResult> {
+    if (isBefore(data.date, new Date())) {
+      throw new MakeReservationErrors.PastDateReservationError()
+    }
+
     const parentEvent = await this.findEventByParentRepository.findEventByParent(data.parentId)
     if (!parentEvent) throw new MakeReservationErrors.NoParentEventFound()
     await this._validateParentEventRuleSet(data.date, parentEvent)
     /**
-     * dont know how to use transaction inside repository with Dependecy injection
+     * dont know how to use transaction inside repository with dependency injection
      */
     // @ts-ignore
     const ticket = await this.prisma.$transaction(async (prismaT: PrismaClient) => {
-      const findOrCreateRepo = new PrismaBookedEventRepository(prismaT)
-      const createTicketRepo = new PrismaTicketRepository(prismaT)
+      const eventInstanceRepo = new PrismaEventInstanceRepository(prismaT)
+      const ticketRepo = new PrismaTicketRepository(prismaT)
 
-      const bookedEvent = await findOrCreateRepo.findOrCreateBookedEvent({
+      const eventInstance = await eventInstanceRepo.findOrCreateBookedEvent({
         parentId: parentEvent.id,
         eventDetails: parentEvent.eventDetails,
         date: data.date
       })
-      const bookedEventsTicketsCount = bookedEvent.tickets.filter(({ status }) => {
+
+      const eventIntanceTicketsCount = eventInstance.tickets.filter(({ status }) => {
         return status !== TicketStatus.CANCELED
       }).length
 
-      if (bookedEventsTicketsCount + 1 > bookedEvent.eventDetails.slots) {
+      if (eventIntanceTicketsCount + 1 > eventInstance.eventDetails.slots) {
         throw new MakeReservationErrors.EventIsFullError()
       }
 
-      return createTicketRepo.create({
+      return ticketRepo.create({
         userId: this.currentUser.id,
-        bookedEventId: bookedEvent.id
+        eventInstanceId: eventInstance.id
       })
     }) as Ticket
     return ticket
