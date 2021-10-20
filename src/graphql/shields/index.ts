@@ -16,8 +16,8 @@ export const shields = shield({
     '*': isAuthenticated,
     CreateSpace: authenticatedAdminShield,
     MakeReservation: authenticatedClientShield,
-    registerUser: allow,
-    loginUser: allow
+    RegisterUser: allow,
+    LoginUser: allow
   },
   Occurence: {
     '*': isAuthenticated,

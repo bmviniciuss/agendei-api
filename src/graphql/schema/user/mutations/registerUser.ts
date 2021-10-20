@@ -14,7 +14,7 @@ export const RegisterUserInput = inputObjectType({
   }
 })
 
-export const RegisterUserMutation = mutationField('registerUser', {
+export const RegisterUserMutation = mutationField('RegisterUser', {
   description: 'Registers a user',
   type: 'User',
 
