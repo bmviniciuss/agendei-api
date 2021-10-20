@@ -3,6 +3,8 @@ import { mutationField, inputObjectType, nonNull, arg } from 'nexus'
 
 import { RuleSetTypeEnum, SpaceNexus } from '..'
 
+import { PrismaSpaceRepository } from '../../../../modules/space/repos/implementations/PrismaSpaceRepository'
+import { CreateSpace } from '../../../../modules/space/useCases/space/createSpace/CreateSpace'
 import { Context } from '../../../../shared/infra/graphql/setupGraphql'
 
 export const CreateSpaceRuleSetInput = inputObjectType({
@@ -36,23 +38,9 @@ export const CreateSpaceMutation = mutationField('CreateSpace', {
     }))
   },
 
-  async resolve (_, { input }, { currentUser, prisma }: Context) {
-    const { name, description, clientsPerSlot, ruleSet } = input
-    return prisma.space.create({
-      data: {
-        name: name,
-        description: description,
-        clientsPerSlot: clientsPerSlot,
-        ruleSet: {
-          create: {
-            limit: ruleSet.limit,
-            type: ruleSet.type
-          }
-        }
-      },
-      include: {
-        ruleSet: true
-      }
-    })
+  async resolve (_, { input }, { prisma }: Context) {
+    const spaceRepository = new PrismaSpaceRepository(prisma)
+    const useCase = new CreateSpace(spaceRepository)
+    return useCase.execute(input)
   }
 })
