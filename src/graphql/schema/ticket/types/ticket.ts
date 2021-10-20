@@ -3,11 +3,26 @@ import { TicketStatus } from '.prisma/client'
 import { objectType, enumType } from 'nexus'
 
 import { Context } from '../../../../shared/infra/graphql/setupGraphql'
+import { EventDetailsNexus } from '../../event'
 import { UserNexus } from '../../user'
 
 export const TicketStatusNexusEnum = enumType({
   name: 'TicketStatus',
   members: Object.values(TicketStatus)
+})
+
+export const EventBookedNexus = objectType({
+  name: 'EventBooked',
+  definition (t) {
+    t.nonNull.id('id')
+    t.field('eventDetails', {
+      type: EventDetailsNexus
+    })
+    t.nonNull.field('date', { type: 'DateTime' })
+    t.boolean('active')
+    t.field('createdAt', { type: 'DateTime' })
+    t.field('updatedAt', { type: 'DateTime' })
+  }
 })
 
 export const TicketNexus = objectType({
@@ -29,7 +44,9 @@ export const TicketNexus = objectType({
         }).then(data => data!.user)
       }
     })
-
+    t.field('bookedEvent', {
+      type: EventBookedNexus
+    })
     t.nonNull.field('createdAt', { type: 'DateTime' })
     t.nonNull.field('updatedAt', { type: 'DateTime' })
   }

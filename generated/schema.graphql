@@ -41,6 +41,15 @@ type Event {
   updatedAt: DateTime
 }
 
+type EventBooked {
+  active: Boolean
+  createdAt: DateTime
+  date: DateTime!
+  eventDetails: EventDetails
+  id: ID!
+  updatedAt: DateTime
+}
+
 type EventDetails {
   active: Boolean
   createdAt: DateTime
@@ -123,6 +132,9 @@ type Query {
   """Get all spaces"""
   GetSpaces: [Space!]
 
+  """Get current user's tickets"""
+  GetUserTickets: [Ticket!]
+
   """Get current user."""
   me: User
 }
@@ -163,6 +175,7 @@ type SpaceRuleSet {
 
 type Ticket {
   active: Boolean!
+  bookedEvent: EventBooked
   createdAt: DateTime!
   id: ID!
   status: TicketStatus!

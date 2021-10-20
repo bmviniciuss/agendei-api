@@ -93,6 +93,14 @@ export interface NexusGenObjects {
     rule: string; // String!
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
   }
+  EventBooked: { // root type
+    active?: boolean | null; // Boolean
+    createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    date: NexusGenScalars['DateTime']; // DateTime!
+    eventDetails?: NexusGenRootTypes['EventDetails'] | null; // EventDetails
+    id: string; // ID!
+    updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
+  }
   EventDetails: { // root type
     active?: boolean | null; // Boolean
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
@@ -142,6 +150,7 @@ export interface NexusGenObjects {
   }
   Ticket: { // root type
     active: boolean; // Boolean!
+    bookedEvent?: NexusGenRootTypes['EventBooked'] | null; // EventBooked
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
     status: NexusGenEnums['TicketStatus']; // TicketStatus!
@@ -175,6 +184,14 @@ export interface NexusGenFieldTypes {
     eventDetails: NexusGenRootTypes['EventDetails'] | null; // EventDetails
     id: string; // ID!
     rule: string; // String!
+    updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
+  }
+  EventBooked: { // field return type
+    active: boolean | null; // Boolean
+    createdAt: NexusGenScalars['DateTime'] | null; // DateTime
+    date: NexusGenScalars['DateTime']; // DateTime!
+    eventDetails: NexusGenRootTypes['EventDetails'] | null; // EventDetails
+    id: string; // ID!
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
   }
   EventDetails: { // field return type
@@ -217,6 +234,7 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     GetOccurences: NexusGenRootTypes['Occurence'][] | null; // [Occurence!]
     GetSpaces: NexusGenRootTypes['Space'][] | null; // [Space!]
+    GetUserTickets: NexusGenRootTypes['Ticket'][] | null; // [Ticket!]
     me: NexusGenRootTypes['User'] | null; // User
   }
   Space: { // field return type
@@ -240,6 +258,7 @@ export interface NexusGenFieldTypes {
   }
   Ticket: { // field return type
     active: boolean; // Boolean!
+    bookedEvent: NexusGenRootTypes['EventBooked'] | null; // EventBooked
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
     status: NexusGenEnums['TicketStatus']; // TicketStatus!
@@ -264,6 +283,14 @@ export interface NexusGenFieldTypeNames {
     eventDetails: 'EventDetails'
     id: 'ID'
     rule: 'String'
+    updatedAt: 'DateTime'
+  }
+  EventBooked: { // field return type name
+    active: 'Boolean'
+    createdAt: 'DateTime'
+    date: 'DateTime'
+    eventDetails: 'EventDetails'
+    id: 'ID'
     updatedAt: 'DateTime'
   }
   EventDetails: { // field return type name
@@ -306,6 +333,7 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     GetOccurences: 'Occurence'
     GetSpaces: 'Space'
+    GetUserTickets: 'Ticket'
     me: 'User'
   }
   Space: { // field return type name
@@ -329,6 +357,7 @@ export interface NexusGenFieldTypeNames {
   }
   Ticket: { // field return type name
     active: 'Boolean'
+    bookedEvent: 'EventBooked'
     createdAt: 'DateTime'
     id: 'ID'
     status: 'TicketStatus'

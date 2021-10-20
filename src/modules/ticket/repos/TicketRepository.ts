@@ -1,4 +1,4 @@
-import { EventBooked, Space, Ticket, User } from '.prisma/client'
+import { EventBooked, EventDetails, Space, Ticket, User } from '.prisma/client'
 
 import { TimeRange } from '../../../types'
 
@@ -19,4 +19,14 @@ export type CreateTicketRepositoryDTO = {
 
 export interface CreateTicketRepository {
   create(data: CreateTicketRepositoryDTO): Promise<Ticket>
+}
+
+export type TicketWithEventBooked = Ticket & {
+  bookedEvent: EventBooked & {
+    eventDetails: EventDetails
+  }
+}
+
+export interface LoadUserTicketsRepository {
+  loadUsersTickets(userId: User['id']): Promise<TicketWithEventBooked[]>
 }
