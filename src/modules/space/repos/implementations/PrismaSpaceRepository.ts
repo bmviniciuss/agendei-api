@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 
-import { DomainSpace } from '../../../../graphql/schema/space/domain/Space'
+import { DomainSpace } from '../../domain/Space'
 import { CreateSpaceDTO } from '../../useCases/space/createSpace/CreateSpaceDTO'
 import { ISpaceRepository } from '../ISpaceRepository'
 

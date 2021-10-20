@@ -1,5 +1,5 @@
-import { DomainSpace } from '../../../../../graphql/schema/space/domain/Space'
 import { UseCase } from '../../../../../shared/core/UseCase'
+import { DomainSpace } from '../../../domain/Space'
 import { ISpaceRepository } from '../../../repos/ISpaceRepository'
 import { CreateSpaceDTO } from './CreateSpaceDTO'
 
