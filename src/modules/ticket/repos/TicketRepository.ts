@@ -1,6 +1,7 @@
-import { EventBooked, EventDetails, Space, Ticket, User } from '.prisma/client'
+import { EventInstance, Space, Ticket, User } from '.prisma/client'
 
-import { TimeRange } from '../../../types'
+import { TEventWithDetails, TimeRange } from '../../../types'
+import { DomainTicket } from '../domain/Ticket'
 
 export type CountActiveUserTicketsFromSpaceInDateRangeRepositoryDTO = {
   userId: User['id']
@@ -14,19 +15,17 @@ export interface CountActiveUserTicketsFromSpaceInDateRangeRepository {
 
 export type CreateTicketRepositoryDTO = {
   userId: User['id']
-  bookedEventId: EventBooked['id']
+  eventInstanceId: EventInstance['id']
 }
 
 export interface CreateTicketRepository {
   create(data: CreateTicketRepositoryDTO): Promise<Ticket>
 }
 
-export type TicketWithEventBooked = Ticket & {
-  bookedEvent: EventBooked & {
-    eventDetails: EventDetails
-  }
+export type TicketWithEventInstance = Ticket & {
+  eventInstance: TEventWithDetails<EventInstance>
 }
 
-export interface LoadUserTicketsRepository {
-  loadUsersTickets(userId: User['id']): Promise<TicketWithEventBooked[]>
+export interface ITicketRepository {
+  loadTicketsFromUser(userId: User['id']): Promise<DomainTicket[]>
 }
