@@ -64,6 +64,11 @@ LoadUserTicketsRepository {
           connect: {
             id: data.bookedEventId
           }
+        },
+        eventInstance: {
+          connect: {
+            id: data.bookedEventId
+          }
         }
       }
     })

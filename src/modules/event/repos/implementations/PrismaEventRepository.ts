@@ -42,6 +42,11 @@ FindEventByParentId {
         active: true
       },
       include: {
+        eventsInstances: {
+          include: {
+            eventDetails: true
+          }
+        },
         eventDetails: true,
         eventsBooked: {
           include: {

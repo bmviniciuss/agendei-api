@@ -4,7 +4,7 @@ import { omit, orderBy } from 'lodash'
 import { RRuleSet, rrulestr } from 'rrule'
 
 import { UseCase } from '../../../../shared/core/UseCase'
-import { EventBookedWithDetails, EventWithDetails, EventWithDetailsAndBookedEvents, Occurrence, TimeRange } from '../../../../types'
+import { EventBookedWithDetails, EventInstanceWithEventDetails, EventWithDetails, EventWithDetailsAndBookedEvents, Occurrence, TimeRange } from '../../../../types'
 import { LoadEventsToOccurrencesRepository } from '../../repos/EventRepository'
 import { GetOccurrencesDTO } from './GetOccurrencesDTO'
 
@@ -32,15 +32,15 @@ export class GetOccurrencesUseCase implements UseCase<GetOccurrencesDTO, GetOccu
     const rrule = rrulestr(event.rule)
     rruleSet.rrule(rrule)
 
-    // Removing booked events from occurrence (virutal), because its already a instace on database
-    event.eventsBooked.forEach(({ date }) => {
-      rruleSet.exdate(date)
+    // removing events instances from occurences (virtual objects), because its a instace on database
+    event.eventsInstances.forEach(({ parentDate }) => {
+      rruleSet.exdate(parentDate)
     })
 
     const occurencesDates = rruleSet.between(range.startTime, range.endTime)
     return [
       ...this._buildVirtualOccurrences(event, occurencesDates),
-      ...this._buildConcreteBookedOccurences(event)
+      ...this._buildConcreteOccurences(event)
     ]
   }
 
@@ -54,17 +54,17 @@ export class GetOccurrencesUseCase implements UseCase<GetOccurrencesDTO, GetOccu
     }))
   }
 
-  private _buildConcreteBookedOccurences (event: EventWithDetailsAndBookedEvents): Occurrence[] {
-    return event.eventsBooked.map(bookedEvent => ({
-      ...this._mapEventDetails(bookedEvent),
-      id: bookedEvent.id,
-      parentId: bookedEvent.parentId,
+  private _buildConcreteOccurences (event: EventWithDetailsAndBookedEvents): Occurrence[] {
+    return event.eventsInstances.map(eventInstance => ({
+      ...this._mapEventDetails(eventInstance),
+      id: eventInstance.id,
+      parentId: eventInstance.parentId,
       type: EventTypeEnum.BOOKED,
-      date: bookedEvent.date.toISOString()
+      date: eventInstance.date.toISOString()
     }))
   }
 
-  private _mapEventDetails (e: EventWithDetails | EventBookedWithDetails) {
+  private _mapEventDetails (e: EventWithDetails | EventBookedWithDetails | EventInstanceWithEventDetails) {
     return {
       ...omit(e.eventDetails, 'id', 'type')
     }
