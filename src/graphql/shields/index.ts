@@ -1,26 +1,26 @@
-import { allow, shield } from 'graphql-shield'
+import { allow, and, shield } from 'graphql-shield'
 
-import { isAuthenticated } from './rules'
+import { isAdmin, isAuthenticated } from './rules'
+import { isClient } from './rules/isClient'
 
 const DEBUG_ENABLED = process.env.NODE_ENV === 'dev'
 
-// const authenticatedAdminShield = and(isAuthenticated, isAdmin)
+const authenticatedAdminShield = and(isAuthenticated, isAdmin)
+const authenticatedClientShield = and(isAuthenticated, isClient)
 
 export const shields = shield({
   Query: {
     '*': isAuthenticated
-    // MakeReservation: authenticatedClientShield
   },
   Mutation: {
     '*': isAuthenticated,
-    // CreateSpace: authenticatedAdminShield,
-    // CreateSlot: authenticatedAdminShield,
+    CreateSpace: authenticatedAdminShield,
+    MakeReservation: authenticatedClientShield,
     registerUser: allow,
     loginUser: allow
+  },
+  Occurence: {
+    '*': isAuthenticated,
+    availableSlots: authenticatedAdminShield
   }
-  // Slot: {
-  //   '*': isAuthenticated
-  //   // activeTicketsCount: authenticatedAdminShield,
-  //   // tickets: authenticatedAdminShield
-  // }
 }, { debug: DEBUG_ENABLED, allowExternalErrors: true })

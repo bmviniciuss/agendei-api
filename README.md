@@ -13,5 +13,5 @@ API do projeto agendamento para a disciplina de Engenharia de Software da UFPB
 
 ## Cliente
 - [x] Fazer agendamento para um slot
-- [ ] Ver histórico de reservas
+- [x] Ver histórico de reservas
 - [ ] Ver comprovante de reserva

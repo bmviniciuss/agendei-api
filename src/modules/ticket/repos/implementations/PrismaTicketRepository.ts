@@ -1,14 +1,30 @@
 import { PrismaClient, Ticket, TicketStatus } from '.prisma/client'
 
-import { CountActiveUserTicketsFromSpaceInDateRangeRepository, CountActiveUserTicketsFromSpaceInDateRangeRepositoryDTO, CreateTicketRepository, CreateTicketRepositoryDTO } from '../TicketRepository'
+import {
+  CountActiveUserTicketsFromSpaceInDateRangeRepository,
+  CountActiveUserTicketsFromSpaceInDateRangeRepositoryDTO,
+  CreateTicketRepository,
+  CreateTicketRepositoryDTO,
+  LoadUserTicketsRepository,
+  TicketWithEventBooked
+} from '../TicketRepository'
 
 export class PrismaTicketRepository implements
 CountActiveUserTicketsFromSpaceInDateRangeRepository,
-CreateTicketRepository {
+CreateTicketRepository,
+LoadUserTicketsRepository {
   private readonly ticketStatusFilter: TicketStatus[]
+  private readonly ticketIncludeClause;
 
   constructor (private readonly prisma: PrismaClient) {
     this.ticketStatusFilter = [TicketStatus.RESERVED, TicketStatus.USED]
+    this.ticketIncludeClause = {
+      bookedEvent: {
+        include: {
+          eventDetails: true
+        }
+      }
+    }
   }
 
   async countActiveUserTicketsFromSpaceInDateRange (data: CountActiveUserTicketsFromSpaceInDateRangeRepositoryDTO): Promise<number> {
@@ -49,6 +65,20 @@ CreateTicketRepository {
             id: data.bookedEventId
           }
         }
+      }
+    })
+  }
+
+  async loadUsersTickets (userId: string): Promise<TicketWithEventBooked[]> {
+    return this.prisma.ticket.findMany({
+      where: {
+        user: {
+          id: userId
+        }
+      },
+      include: this.ticketIncludeClause,
+      orderBy: {
+        createdAt: 'desc'
       }
     })
   }
