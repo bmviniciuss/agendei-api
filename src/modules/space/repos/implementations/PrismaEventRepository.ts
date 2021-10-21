@@ -29,4 +29,17 @@ export class PrismaEventRepository implements IEventRepository {
       }
     })
   }
+
+  listSpaceEvents (spaceId: string): Promise<DomainEvent[]> {
+    return this.prisma.event.findMany({
+      where: {
+        space: {
+          id: spaceId
+        }
+      },
+      include: {
+        eventDetails: true
+      }
+    })
+  }
 }

@@ -75,6 +75,10 @@ input GetOccurrencesInput {
   startTime: DateTime!
 }
 
+input GetSpaceEventsInput {
+  spaceId: ID!
+}
+
 input LoginUserInput {
   email: String!
   password: String!
@@ -128,6 +132,9 @@ type Occurrence {
 type Query {
   """Get occurences"""
   GetOccurences(input: GetOccurrencesInput!): [Occurrence!]
+
+  """Get space's events """
+  GetSpaceEvents(input: GetSpaceEventsInput!): [Event!]
 
   """Get all spaces"""
   GetSpaces: [Space!]

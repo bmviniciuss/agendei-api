@@ -53,6 +53,9 @@ export interface NexusGenInputs {
     endTime: NexusGenScalars['DateTime']; // DateTime!
     startTime: NexusGenScalars['DateTime']; // DateTime!
   }
+  GetSpaceEventsInput: { // input type
+    spaceId: string; // ID!
+  }
   LoginUserInput: { // input type
     email: string; // String!
     password: string; // String!
@@ -233,6 +236,7 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     GetOccurences: NexusGenRootTypes['Occurrence'][] | null; // [Occurrence!]
+    GetSpaceEvents: NexusGenRootTypes['Event'][] | null; // [Event!]
     GetSpaces: NexusGenRootTypes['Space'][] | null; // [Space!]
     GetUserTickets: NexusGenRootTypes['Ticket'][] | null; // [Ticket!]
     me: NexusGenRootTypes['User'] | null; // User
@@ -332,6 +336,7 @@ export interface NexusGenFieldTypeNames {
   }
   Query: { // field return type name
     GetOccurences: 'Occurrence'
+    GetSpaceEvents: 'Event'
     GetSpaces: 'Space'
     GetUserTickets: 'Ticket'
     me: 'User'
@@ -396,6 +401,9 @@ export interface NexusGenArgTypes {
   Query: {
     GetOccurences: { // args
       input: NexusGenInputs['GetOccurrencesInput']; // GetOccurrencesInput!
+    }
+    GetSpaceEvents: { // args
+      input: NexusGenInputs['GetSpaceEventsInput']; // GetSpaceEventsInput!
     }
   }
 }
