@@ -2,13 +2,10 @@ import { PrismaClient } from '.prisma/client'
 
 import {
   EventQuery,
-  EventToOccurence,
-  FindEventByParentId,
-  LoadEventsToOccurrencesRepository
+  FindEventByParentId
 } from '../EventRepository'
 
 export class PrismaEventRepository implements
-LoadEventsToOccurrencesRepository,
 FindEventByParentId {
   private eventQueryInclude;
 
@@ -26,35 +23,6 @@ FindEventByParentId {
         }
       }
     }
-  }
-
-  loadEventsToOccurrences (spaceIds: string[] | undefined | null): Promise<EventToOccurence[]> {
-    const spaceFilter = (() => {
-      if (!spaceIds || spaceIds === null) return undefined
-      return { in: spaceIds as string[] }
-    })()
-
-    return this.prisma.event.findMany({
-      where: {
-        space: {
-          id: spaceFilter
-        },
-        active: true
-      },
-      include: {
-        eventsInstances: {
-          include: {
-            eventDetails: true
-          }
-        },
-        eventDetails: true,
-        eventsBooked: {
-          include: {
-            eventDetails: true
-          }
-        }
-      }
-    })
   }
 
   findEventByParent (parentId: string): Promise<EventQuery | null> {

@@ -51,6 +51,7 @@ export interface NexusGenInputs {
   }
   GetOccurrencesInput: { // input type
     endTime: NexusGenScalars['DateTime']; // DateTime!
+    spaceIds?: string[] | null; // [String!]
     startTime: NexusGenScalars['DateTime']; // DateTime!
   }
   GetSpaceEventsInput: { // input type

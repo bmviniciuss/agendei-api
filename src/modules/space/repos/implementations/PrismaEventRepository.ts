@@ -1,8 +1,9 @@
 import { PrismaClient } from '@prisma/client'
 
 import { DomainEvent } from '../../domain/Event'
+import { DomainEventWithEventsInstaces } from '../../domain/EventWithInstance'
 import { CreateEventDTO } from '../../useCases/event/useCases/createEvent/CreateEventDTO'
-import { IEventRepository } from '../IEventRepository'
+import { IEventRepository, SpaceId } from '../IEventRepository'
 
 export class PrismaEventRepository implements IEventRepository {
   constructor (private readonly prisma: PrismaClient) {
@@ -39,6 +40,28 @@ export class PrismaEventRepository implements IEventRepository {
       },
       include: {
         eventDetails: true
+      }
+    })
+  }
+
+  listSpaceEventsWithInstances (spaceIds?: SpaceId[]): Promise<DomainEventWithEventsInstaces[]> {
+    const spaceFilter = (() => {
+      if (!spaceIds || spaceIds === null) return undefined
+      return { id: { in: spaceIds as string[] } }
+    })()
+
+    return this.prisma.event.findMany({
+      where: {
+        active: true,
+        space: spaceFilter || undefined
+      },
+      include: {
+        eventDetails: true,
+        eventsInstances: {
+          include: {
+            eventDetails: true
+          }
+        }
       }
     })
   }
