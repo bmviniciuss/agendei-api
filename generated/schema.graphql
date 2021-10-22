@@ -127,7 +127,7 @@ type Occurrence {
   isParentEvent: Boolean!
   isRescheduled: Boolean!
   parentId: ID!
-  slots: Int
+  slots: Int!
   title: String
   type: EventTypeEnum!
   updatedAt: DateTime

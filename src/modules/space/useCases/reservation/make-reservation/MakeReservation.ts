@@ -8,22 +8,26 @@ import startOfMonth from 'date-fns/startOfMonth'
 import endOfMonth from 'date-fns/endOfMonth'
 import isBefore from 'date-fns/isBefore'
 
-import { UseCase } from '../../../../shared/core/UseCase'
-import { EventQuery, FindEventByParentId } from '../../../event/repos/EventRepository'
+import { UseCase } from '../../../../../shared/core/UseCase'
 import { MakeReservationDTO } from './MakeReservationDTO'
 import { MakeReservationErrors } from './MakeReservationErrors'
-import { CountActiveUserTicketsFromSpaceInDateRangeRepository } from '../../repos/TicketRepository'
-import { PrismaEventInstanceRepository } from '../../repos/implementations/PrismaEventInstanceRepository'
-import { PrismaTicketRepository } from '../../repos/implementations/PrismaTicketRepository'
+import { PrismaTicketRepository } from '../../../../ticket/repos/implementations/PrismaTicketRepository'
+import { IEventRepository } from '../../../repos/IEventRepository'
+import { DomainEvent } from '../../../domain/Event'
+import { DomainSpace } from '../../../domain/Space'
+import { ITicketRepository } from '../../../../ticket/repos/TicketRepository'
+import { PrismaEventInstanceRepoitory } from '../../../repos/implementations/PrismaEventInstanceRepository'
 
 export type MakeReservationUseCaseResult = Ticket | null
+
+type DomainEventWithSpace = DomainEvent & { space: DomainSpace }
 
 export class MakeReservationUseCase implements UseCase<MakeReservationDTO, MakeReservationUseCaseResult> {
   constructor (
     private readonly currentUser: User,
-    private readonly findEventByParentRepository: FindEventByParentId,
-    private readonly countCurrentUseActiveTickets: CountActiveUserTicketsFromSpaceInDateRangeRepository,
-    private readonly prisma: PrismaClient
+    private readonly prisma: PrismaClient,
+    private readonly eventRepository: IEventRepository,
+    private readonly ticketRepository: ITicketRepository
   ) { }
 
   async execute (data: MakeReservationDTO): Promise<MakeReservationUseCaseResult> {
@@ -31,7 +35,7 @@ export class MakeReservationUseCase implements UseCase<MakeReservationDTO, MakeR
       throw new MakeReservationErrors.PastDateReservationError()
     }
 
-    const parentEvent = await this.findEventByParentRepository.findEventByParent(data.parentId)
+    const parentEvent: DomainEventWithSpace | null = await this.eventRepository.findById(data.parentId)
     if (!parentEvent) throw new MakeReservationErrors.NoParentEventFound()
     await this._validateParentEventRuleSet(data.date, parentEvent)
     /**
@@ -39,10 +43,10 @@ export class MakeReservationUseCase implements UseCase<MakeReservationDTO, MakeR
      */
     // @ts-ignore
     const ticket = await this.prisma.$transaction(async (prismaT: PrismaClient) => {
-      const eventInstanceRepo = new PrismaEventInstanceRepository(prismaT)
-      const ticketRepo = new PrismaTicketRepository(prismaT)
+      const transationEventInstanceRepository = new PrismaEventInstanceRepoitory(prismaT)
+      const transactionalPrismaTicketRepository = new PrismaTicketRepository(prismaT)
 
-      const eventInstance = await eventInstanceRepo.findOrCreateBookedEvent({
+      const eventInstance = await transationEventInstanceRepository.findOrCreateEventInstace({
         parentId: parentEvent.id,
         eventDetails: parentEvent.eventDetails,
         date: data.date
@@ -56,7 +60,7 @@ export class MakeReservationUseCase implements UseCase<MakeReservationDTO, MakeR
         throw new MakeReservationErrors.EventIsFullError()
       }
 
-      return ticketRepo.create({
+      return transactionalPrismaTicketRepository.create({
         userId: this.currentUser.id,
         eventInstanceId: eventInstance.id
       })
@@ -64,12 +68,12 @@ export class MakeReservationUseCase implements UseCase<MakeReservationDTO, MakeR
     return ticket
   }
 
-  private async _validateParentEventRuleSet (date: Date, event: EventQuery) {
+  private async _validateParentEventRuleSet (date: Date, event: DomainEventWithSpace) {
     const { ruleSet, id: spaceId } = event.space
     if (ruleSet) {
       const dateToValidate = date
       const verificationRangeSlot = this._getRuleSetDateRangeValidation(ruleSet.type, dateToValidate)
-      const usersTicketFromRangeCount = await this.countCurrentUseActiveTickets.countActiveUserTicketsFromSpaceInDateRange({
+      const usersTicketFromRangeCount = await this.ticketRepository.countUsersActiveTicketFromSpace({
         userId: this.currentUser.id,
         spaceId,
         dateRange: {

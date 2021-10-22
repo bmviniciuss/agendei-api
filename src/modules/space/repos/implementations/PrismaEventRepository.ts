@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client'
 
 import { DomainEvent } from '../../domain/Event'
 import { DomainEventWithEventsInstaces } from '../../domain/EventWithInstance'
+import { DomainSpace } from '../../domain/Space'
 import { CreateEventDTO } from '../../useCases/event/useCases/createEvent/CreateEventDTO'
 import { IEventRepository, SpaceId } from '../IEventRepository'
 
@@ -60,6 +61,22 @@ export class PrismaEventRepository implements IEventRepository {
         eventsInstances: {
           include: {
             eventDetails: true
+          }
+        }
+      }
+    })
+  }
+
+  findById (id: string): Promise<DomainEvent & { space: DomainSpace } | null> {
+    return this.prisma.event.findUnique({
+      where: {
+        id
+      },
+      include: {
+        eventDetails: true,
+        space: {
+          include: {
+            ruleSet: true
           }
         }
       }

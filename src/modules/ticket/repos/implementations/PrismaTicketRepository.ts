@@ -1,17 +1,13 @@
-import { PrismaClient, Ticket, TicketStatus } from '.prisma/client'
+import { PrismaClient, TicketStatus } from '.prisma/client'
 
 import {
-  CountActiveUserTicketsFromSpaceInDateRangeRepository,
-  CountActiveUserTicketsFromSpaceInDateRangeRepositoryDTO,
-  CreateTicketRepository,
-  CreateTicketRepositoryDTO, ITicketRepository
+  CountUsersActiveTicketFromSpaceDTO,
+  CreateTicketRepositoryDTO,
+  ITicketRepository
 } from '../TicketRepository'
 import { DomainTicket } from '../../domain/Ticket'
 
-export class PrismaTicketRepository implements
-CountActiveUserTicketsFromSpaceInDateRangeRepository,
-CreateTicketRepository,
-ITicketRepository {
+export class PrismaTicketRepository implements ITicketRepository {
   private readonly ticketStatusFilter: TicketStatus[]
   private readonly ticketIncludeClause;
 
@@ -26,7 +22,7 @@ ITicketRepository {
     }
   }
 
-  async countActiveUserTicketsFromSpaceInDateRange (data: CountActiveUserTicketsFromSpaceInDateRangeRepositoryDTO): Promise<number> {
+  countUsersActiveTicketFromSpace (data: CountUsersActiveTicketFromSpaceDTO): Promise<number> {
     const { dateRange, spaceId, userId } = data
     return this.prisma.ticket.count({
       where: {
@@ -34,7 +30,7 @@ ITicketRepository {
           id: userId
         },
         status: {
-          in: this.ticketStatusFilter
+          in: [TicketStatus.RESERVED, TicketStatus.USED]
         },
         eventInstance: {
           parent: {
@@ -51,7 +47,7 @@ ITicketRepository {
     })
   }
 
-  async create (data: CreateTicketRepositoryDTO): Promise<Ticket> {
+  async create (data: CreateTicketRepositoryDTO): Promise<DomainTicket> {
     return this.prisma.ticket.create({
       data: {
         user: {
@@ -62,6 +58,13 @@ ITicketRepository {
         eventInstance: {
           connect: {
             id: data.eventInstanceId
+          }
+        }
+      },
+      include: {
+        eventInstance: {
+          include: {
+            eventDetails: true
           }
         }
       }

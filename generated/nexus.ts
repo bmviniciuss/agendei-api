@@ -132,7 +132,7 @@ export interface NexusGenObjects {
     isParentEvent: boolean; // Boolean!
     isRescheduled: boolean; // Boolean!
     parentId: string; // ID!
-    slots?: number | null; // Int
+    slots: number; // Int!
     title?: string | null; // String
     type: NexusGenEnums['EventTypeEnum']; // EventTypeEnum!
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
@@ -236,7 +236,7 @@ export interface NexusGenFieldTypes {
     isParentEvent: boolean; // Boolean!
     isRescheduled: boolean; // Boolean!
     parentId: string; // ID!
-    slots: number | null; // Int
+    slots: number; // Int!
     title: string | null; // String
     type: NexusGenEnums['EventTypeEnum']; // EventTypeEnum!
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime

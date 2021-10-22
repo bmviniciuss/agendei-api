@@ -1,7 +1,7 @@
+import { TicketStatus } from '.prisma/client'
+
 import { objectType } from 'nexus'
 
-import { GetAvailableSlotsUseCase } from '../../../../modules/space/useCases/eventInstance/getAvailableSlots/GetAvailableSlotsUseCase'
-import { PrismaEventInstanceRepository } from '../../../../modules/ticket/repos/implementations/PrismaEventInstanceRepository'
 import { Context } from '../../../../shared/infra/graphql/setupGraphql'
 import { EventTypeEnumNexus } from './event'
 
@@ -13,16 +13,38 @@ export const OccurenceType = objectType({
     t.string('title')
     t.string('description')
     t.float('duration')
-    t.int('slots')
+    t.nonNull.int('slots')
     t.int('availableSlots', {
       async resolve (root, _args, { prisma }: Context) {
-        const eventInstanceRepo = new PrismaEventInstanceRepository(prisma)
-        const useCase = new GetAvailableSlotsUseCase(eventInstanceRepo)
-        return useCase.execute({
-          bookedEventId: root.id,
-          eventType: root.type,
-          root: root
-        })
+        if (root.isParentEvent) {
+          return root.slots || 0
+        } else {
+          if (root.isCanceled) return 0
+          const eventInstance = await prisma.eventInstance.findUnique({
+            where: {
+              id: root.id
+            },
+            include: {
+              eventDetails: {
+                select: {
+                  slots: true
+                }
+              },
+              tickets: {
+                where: {
+                  status: {
+                    notIn: [TicketStatus.CANCELED]
+                  }
+                }
+              }
+            }
+          })
+          if (!!eventInstance?.tickets.length && eventInstance?.eventDetails?.slots) {
+            const { tickets, eventDetails } = eventInstance
+            return eventDetails.slots - tickets.length
+          }
+          return 0
+        }
       }
     })
     t.nonNull.boolean('isParentEvent')
