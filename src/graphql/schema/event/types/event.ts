@@ -1,5 +1,5 @@
 import { EventTypeEnum } from '@prisma/client'
-import { enumType, nullabilityGuardPlugin, objectType } from 'nexus'
+import { enumType, objectType } from 'nexus'
 
 import { Context } from '../../../../shared/infra/graphql/setupGraphql'
 
