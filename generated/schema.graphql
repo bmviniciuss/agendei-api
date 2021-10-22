@@ -62,6 +62,18 @@ type EventDetails {
   updatedAt: DateTime
 }
 
+type EventInstance {
+  active: Boolean
+  createdAt: DateTime
+  date: DateTime!
+  eventDetails: EventDetails
+  id: ID!
+  isCanceled: Boolean
+  isRescheduled: Boolean
+  parent: Event
+  updatedAt: DateTime
+}
+
 enum EventTypeEnum {
   BOOKED
   CANCELED
@@ -186,8 +198,8 @@ type SpaceRuleSet {
 
 type Ticket {
   active: Boolean!
-  bookedEvent: EventBooked
   createdAt: DateTime!
+  eventInstance: EventInstance
   id: ID!
   status: TicketStatus!
   updatedAt: DateTime!

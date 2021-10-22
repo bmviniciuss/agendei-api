@@ -116,6 +116,15 @@ export interface NexusGenObjects {
     type: NexusGenEnums['EventTypeEnum']; // EventTypeEnum!
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
   }
+  EventInstance: { // root type
+    active?: boolean | null; // Boolean
+    createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
+    date: NexusGenScalars['DateTime']; // DateTime!
+    id: string; // ID!
+    isCanceled?: boolean | null; // Boolean
+    isRescheduled?: boolean | null; // Boolean
+    updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
+  }
   LoginUserResult: { // root type
     accessToken: string; // String!
     user: NexusGenRootTypes['User']; // User!
@@ -157,7 +166,6 @@ export interface NexusGenObjects {
   }
   Ticket: { // root type
     active: boolean; // Boolean!
-    bookedEvent?: NexusGenRootTypes['EventBooked'] | null; // EventBooked
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
     status: NexusGenEnums['TicketStatus']; // TicketStatus!
@@ -210,6 +218,17 @@ export interface NexusGenFieldTypes {
     slots: number | null; // Int
     title: string | null; // String
     type: NexusGenEnums['EventTypeEnum']; // EventTypeEnum!
+    updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
+  }
+  EventInstance: { // field return type
+    active: boolean | null; // Boolean
+    createdAt: NexusGenScalars['DateTime'] | null; // DateTime
+    date: NexusGenScalars['DateTime']; // DateTime!
+    eventDetails: NexusGenRootTypes['EventDetails'] | null; // EventDetails
+    id: string; // ID!
+    isCanceled: boolean | null; // Boolean
+    isRescheduled: boolean | null; // Boolean
+    parent: NexusGenRootTypes['Event'] | null; // Event
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
   }
   LoginUserResult: { // field return type
@@ -269,8 +288,8 @@ export interface NexusGenFieldTypes {
   }
   Ticket: { // field return type
     active: boolean; // Boolean!
-    bookedEvent: NexusGenRootTypes['EventBooked'] | null; // EventBooked
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    eventInstance: NexusGenRootTypes['EventInstance'] | null; // EventInstance
     id: string; // ID!
     status: NexusGenEnums['TicketStatus']; // TicketStatus!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
@@ -313,6 +332,17 @@ export interface NexusGenFieldTypeNames {
     slots: 'Int'
     title: 'String'
     type: 'EventTypeEnum'
+    updatedAt: 'DateTime'
+  }
+  EventInstance: { // field return type name
+    active: 'Boolean'
+    createdAt: 'DateTime'
+    date: 'DateTime'
+    eventDetails: 'EventDetails'
+    id: 'ID'
+    isCanceled: 'Boolean'
+    isRescheduled: 'Boolean'
+    parent: 'Event'
     updatedAt: 'DateTime'
   }
   LoginUserResult: { // field return type name
@@ -372,8 +402,8 @@ export interface NexusGenFieldTypeNames {
   }
   Ticket: { // field return type name
     active: 'Boolean'
-    bookedEvent: 'EventBooked'
     createdAt: 'DateTime'
+    eventInstance: 'EventInstance'
     id: 'ID'
     status: 'TicketStatus'
     updatedAt: 'DateTime'

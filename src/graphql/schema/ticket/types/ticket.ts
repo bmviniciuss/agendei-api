@@ -3,7 +3,7 @@ import { TicketStatus } from '.prisma/client'
 import { objectType, enumType } from 'nexus'
 
 import { Context } from '../../../../shared/infra/graphql/setupGraphql'
-import { EventDetailsNexus } from '../../event'
+import { EventDetailsNexus, EventInstanceNexus } from '../../event'
 import { UserNexus } from '../../user'
 
 export const TicketStatusNexusEnum = enumType({
@@ -44,8 +44,16 @@ export const TicketNexus = objectType({
         }).then(data => data!.user)
       }
     })
-    t.field('bookedEvent', {
-      type: EventBookedNexus
+    t.field('eventInstance', {
+      type: EventInstanceNexus,
+      async resolve (root, _args, { prisma }: Context) {
+        const ticket = await prisma.ticket.findUnique({
+          where: { id: root.id },
+          include: { eventInstance: true }
+        })
+        if (ticket?.eventInstance) return ticket.eventInstance
+        return null
+      }
     })
     t.nonNull.field('createdAt', { type: 'DateTime' })
     t.nonNull.field('updatedAt', { type: 'DateTime' })
