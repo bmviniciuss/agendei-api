@@ -1,8 +1,8 @@
 import { mutationField, inputObjectType, nonNull, arg } from 'nexus'
 
-import { PrismaEventRepository } from '../../../../modules/event/repos/implementations/PrismaEventRepository'
+import { PrismaEventRepository } from '../../../../modules/space/repos/implementations/PrismaEventRepository'
+import { MakeReservationUseCase } from '../../../../modules/space/useCases/reservation/make-reservation/MakeReservation'
 import { PrismaTicketRepository } from '../../../../modules/ticket/repos/implementations/PrismaTicketRepository'
-import { MakeReservationUseCase } from '../../../../modules/ticket/use-cases/make-reservation/MakeReservationUseCase'
 import { Context } from '../../../../shared/infra/graphql/setupGraphql'
 import { TicketNexus } from '../../ticket/types/ticket'
 
@@ -31,9 +31,9 @@ export const MakeReservationMutation = mutationField('MakeReservation', {
     const ticketRepo = new PrismaTicketRepository(prisma)
     const useCase = new MakeReservationUseCase(
       currentUser!,
+      prisma,
       eventRepo,
-      ticketRepo,
-      prisma
+      ticketRepo
     )
     return useCase.execute(input)
   }

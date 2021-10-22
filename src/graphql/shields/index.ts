@@ -19,8 +19,7 @@ export const shields = shield({
     RegisterUser: allow,
     LoginUser: allow
   },
-  Occurence: {
-    '*': isAuthenticated,
-    availableSlots: authenticatedAdminShield
+  Occurrence: {
+    '*': isAuthenticated
   }
 }, { debug: DEBUG_ENABLED, allowExternalErrors: true })

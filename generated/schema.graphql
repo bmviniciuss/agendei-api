@@ -72,7 +72,12 @@ enum EventTypeEnum {
 
 input GetOccurrencesInput {
   endTime: DateTime!
+  spaceIds: [String!]
   startTime: DateTime!
+}
+
+input GetSpaceEventsInput {
+  spaceId: ID!
 }
 
 input LoginUserInput {
@@ -110,7 +115,7 @@ type Mutation {
   RegisterUser(input: RegisterUserInput!): User
 }
 
-type Occurence {
+type Occurrence {
   active: Boolean
   availableSlots: Int
   createdAt: DateTime
@@ -118,8 +123,11 @@ type Occurence {
   description: String
   duration: Float
   id: ID!
+  isCanceled: Boolean!
+  isParentEvent: Boolean!
+  isRescheduled: Boolean!
   parentId: ID!
-  slots: Int
+  slots: Int!
   title: String
   type: EventTypeEnum!
   updatedAt: DateTime
@@ -127,7 +135,10 @@ type Occurence {
 
 type Query {
   """Get occurences"""
-  GetOccurences(input: GetOccurrencesInput!): [Occurence!]
+  GetOccurences(input: GetOccurrencesInput!): [Occurrence!]
+
+  """Get space's events """
+  GetSpaceEvents(input: GetSpaceEventsInput!): [Event!]
 
   """Get all spaces"""
   GetSpaces: [Space!]

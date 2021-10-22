@@ -1,10 +1,9 @@
-
-import { EventTypeEnum } from '.prisma/client'
-
 import { mutationField, inputObjectType, nonNull, arg } from 'nexus'
 
+import { PrismaEventRepository } from '../../../../modules/space/repos/implementations/PrismaEventRepository'
+import { CreateEvent } from '../../../../modules/space/useCases/event/useCases/createEvent/CreateEvent'
 import { Context } from '../../../../shared/infra/graphql/setupGraphql'
-import { EventNexus } from '../types/event'
+import { EventNexus } from '../types'
 
 export const CreateEventEventDetailsInput = inputObjectType({
   name: 'CreateEvent_EventDetailsInput',
@@ -37,26 +36,8 @@ export const CreateEventMutation = mutationField('CreateEvent', {
   },
 
   async resolve (_, { input }, { prisma }: Context) {
-    const { eventDetails, rule, spaceId } = input
-    const { description, duration, slots, title } = eventDetails
-    return prisma.event.create({
-      data: {
-        rule,
-        space: {
-          connect: {
-            id: spaceId
-          }
-        },
-        eventDetails: {
-          create: {
-            description,
-            duration,
-            slots,
-            title,
-            type: EventTypeEnum.EVENT
-          }
-        }
-      }
-    })
+    const eventRepository = new PrismaEventRepository(prisma)
+    const useCase = new CreateEvent(eventRepository)
+    return useCase.execute(input)
   }
 })

@@ -6,64 +6,74 @@ import startOfISOWeek from 'date-fns/startOfISOWeek'
 import endOfISOWeek from 'date-fns/endOfISOWeek'
 import startOfMonth from 'date-fns/startOfMonth'
 import endOfMonth from 'date-fns/endOfMonth'
+import isBefore from 'date-fns/isBefore'
 
-import { UseCase } from '../../../../shared/core/UseCase'
-import { EventQuery, FindEventByParentId } from '../../../event/repos/EventRepository'
+import { UseCase } from '../../../../../shared/core/UseCase'
 import { MakeReservationDTO } from './MakeReservationDTO'
 import { MakeReservationErrors } from './MakeReservationErrors'
-import { CountActiveUserTicketsFromSpaceInDateRangeRepository } from '../../repos/TicketRepository'
-import { PrismaBookedEventRepository } from '../../repos/implementations/PrismaBookedEventRepository'
-import { PrismaTicketRepository } from '../../repos/implementations/PrismaTicketRepository'
+import { PrismaTicketRepository } from '../../../../ticket/repos/implementations/PrismaTicketRepository'
+import { IEventRepository } from '../../../repos/IEventRepository'
+import { DomainEvent } from '../../../domain/Event'
+import { DomainSpace } from '../../../domain/Space'
+import { ITicketRepository } from '../../../../ticket/repos/TicketRepository'
+import { PrismaEventInstanceRepoitory } from '../../../repos/implementations/PrismaEventInstanceRepository'
 
 export type MakeReservationUseCaseResult = Ticket | null
+
+type DomainEventWithSpace = DomainEvent & { space: DomainSpace }
 
 export class MakeReservationUseCase implements UseCase<MakeReservationDTO, MakeReservationUseCaseResult> {
   constructor (
     private readonly currentUser: User,
-    private readonly findEventByParentRepository: FindEventByParentId,
-    private readonly countCurrentUseActiveTickets: CountActiveUserTicketsFromSpaceInDateRangeRepository,
-    private readonly prisma: PrismaClient
+    private readonly prisma: PrismaClient,
+    private readonly eventRepository: IEventRepository,
+    private readonly ticketRepository: ITicketRepository
   ) { }
 
   async execute (data: MakeReservationDTO): Promise<MakeReservationUseCaseResult> {
-    const parentEvent = await this.findEventByParentRepository.findEventByParent(data.parentId)
+    if (isBefore(data.date, new Date())) {
+      throw new MakeReservationErrors.PastDateReservationError()
+    }
+
+    const parentEvent: DomainEventWithSpace | null = await this.eventRepository.findById(data.parentId)
     if (!parentEvent) throw new MakeReservationErrors.NoParentEventFound()
     await this._validateParentEventRuleSet(data.date, parentEvent)
     /**
-     * dont know how to use transaction inside repository with Dependecy injection
+     * dont know how to use transaction inside repository with dependency injection
      */
     // @ts-ignore
     const ticket = await this.prisma.$transaction(async (prismaT: PrismaClient) => {
-      const findOrCreateRepo = new PrismaBookedEventRepository(prismaT)
-      const createTicketRepo = new PrismaTicketRepository(prismaT)
+      const transationEventInstanceRepository = new PrismaEventInstanceRepoitory(prismaT)
+      const transactionalPrismaTicketRepository = new PrismaTicketRepository(prismaT)
 
-      const bookedEvent = await findOrCreateRepo.findOrCreateBookedEvent({
+      const eventInstance = await transationEventInstanceRepository.findOrCreateEventInstace({
         parentId: parentEvent.id,
         eventDetails: parentEvent.eventDetails,
         date: data.date
       })
-      const bookedEventsTicketsCount = bookedEvent.tickets.filter(({ status }) => {
+
+      const eventIntanceTicketsCount = eventInstance.tickets.filter(({ status }) => {
         return status !== TicketStatus.CANCELED
       }).length
 
-      if (bookedEventsTicketsCount + 1 > bookedEvent.eventDetails.slots) {
+      if (eventIntanceTicketsCount + 1 > eventInstance.eventDetails.slots) {
         throw new MakeReservationErrors.EventIsFullError()
       }
 
-      return createTicketRepo.create({
+      return transactionalPrismaTicketRepository.create({
         userId: this.currentUser.id,
-        bookedEventId: bookedEvent.id
+        eventInstanceId: eventInstance.id
       })
     }) as Ticket
     return ticket
   }
 
-  private async _validateParentEventRuleSet (date: Date, event: EventQuery) {
+  private async _validateParentEventRuleSet (date: Date, event: DomainEventWithSpace) {
     const { ruleSet, id: spaceId } = event.space
     if (ruleSet) {
       const dateToValidate = date
       const verificationRangeSlot = this._getRuleSetDateRangeValidation(ruleSet.type, dateToValidate)
-      const usersTicketFromRangeCount = await this.countCurrentUseActiveTickets.countActiveUserTicketsFromSpaceInDateRange({
+      const usersTicketFromRangeCount = await this.ticketRepository.countUsersActiveTicketFromSpace({
         userId: this.currentUser.id,
         spaceId,
         dateRange: {

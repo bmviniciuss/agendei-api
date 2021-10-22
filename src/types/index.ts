@@ -1,4 +1,4 @@
-import { Event, EventBooked, EventDetails, EventTypeEnum } from '@prisma/client'
+import { Event, EventBooked, EventDetails, EventInstance, EventTypeEnum } from '@prisma/client'
 
 export interface Occurrence {
   id: string
@@ -22,8 +22,11 @@ export type EventWithDetails = TEventWithDetails<Event>
 
 export type EventBookedWithDetails = TEventWithDetails<EventBooked>
 
+export type EventInstanceWithEventDetails = TEventWithDetails<EventInstance>
+
 export type EventWithDetailsAndBookedEvents = EventWithDetails & {
   eventsBooked: EventBookedWithDetails[]
+  eventsInstances: EventInstanceWithEventDetails[]
 }
 
 export type TimeRange = {

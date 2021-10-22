@@ -1,1 +1,2 @@
-export * from './get-occurrences'
+export * from './getOccurrences'
+export * from './getSpaceEvents'

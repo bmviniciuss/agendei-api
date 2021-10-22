@@ -1,2 +1,2 @@
-export * from './make-reservation'
+export * from './MakeReservation'
 export * from './create-event'

@@ -1,4 +1,11 @@
 export namespace MakeReservationErrors {
+  export class PastDateReservationError extends Error {
+    constructor () {
+      super('Não é possível realizar o agendamento em um evento no passado')
+      this.name = 'PastDateReservationError'
+    }
+  }
+
   export class NoParentEventFound extends Error {
     constructor () {
       super('Evento não existe')
@@ -8,7 +15,7 @@ export namespace MakeReservationErrors {
 
   export class UserSpaceTicketsLimitError extends Error {
     constructor () {
-      super('Usuário atingiu o limite de tickets do espaço')
+      super('Usuário atingiu a regra limite de tickets do espaço')
       this.name = 'UserSpaceTicketsLimitError'
     }
   }
