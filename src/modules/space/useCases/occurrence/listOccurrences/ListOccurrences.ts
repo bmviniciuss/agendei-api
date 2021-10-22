@@ -4,7 +4,7 @@ import { omit, orderBy } from 'lodash'
 import { RRuleSet, rrulestr } from 'rrule'
 
 import { UseCase } from '../../../../../shared/core/UseCase'
-import { TimeRange, Occurrence, EventWithDetails, EventBookedWithDetails, EventInstanceWithEventDetails } from '../../../../../types'
+import { TimeRange, EventWithDetails, EventBookedWithDetails, EventInstanceWithEventDetails } from '../../../../../types'
 import { DomainEventWithEventsInstaces } from '../../../domain/EventWithInstance'
 import { DomainOccurrence } from '../../../domain/Occurrence'
 import { IEventRepository } from '../../../repos/IEventRepository'
@@ -27,7 +27,7 @@ export class ListOccurrences implements UseCase<ListOccurrencesDTO, DomainOccurr
     return orderBy(allOccurrencesAndConcreteEvents, 'date')
   }
 
-  private _mountEventOccurrences (event: DomainEventWithEventsInstaces, range: TimeRange): Occurrence[] {
+  private _mountEventOccurrences (event: DomainEventWithEventsInstaces, range: TimeRange): DomainOccurrence[] {
     const rruleSet = new RRuleSet()
     const rrule = rrulestr(event.rule)
     rruleSet.rrule(rrule)
@@ -44,17 +44,20 @@ export class ListOccurrences implements UseCase<ListOccurrencesDTO, DomainOccurr
     ]
   }
 
-  private _buildVirtualOccurrences (event: EventWithDetails, dates: Date[]): Occurrence[] {
+  private _buildVirtualOccurrences (event: EventWithDetails, dates: Date[]): DomainOccurrence[] {
     return dates.map((date) => ({
       ...this._mapEventDetails(event),
       id: event.id,
       parentId: event.id,
       type: EventTypeEnum.OCCURRENCE,
+      isCanceled: false,
+      isParentEvent: true,
+      isRescheduled: false,
       date: date.toISOString()
     }))
   }
 
-  private _buildConcreteOccurences (event: DomainEventWithEventsInstaces): Occurrence[] {
+  private _buildConcreteOccurences (event: DomainEventWithEventsInstaces): DomainOccurrence[] {
     return event.eventsInstances.map(eventInstance => {
       const type: EventTypeEnum = (() => {
         if (eventInstance.isCanceled) return EventTypeEnum.CANCELED
@@ -71,6 +74,9 @@ export class ListOccurrences implements UseCase<ListOccurrencesDTO, DomainOccurr
         ...this._mapEventDetails(eventInstance),
         id: eventInstance.id,
         parentId: eventInstance.parentId,
+        isParentEvent: false,
+        isCanceled: eventInstance.isCanceled,
+        isRescheduled: eventInstance.isRescheduled,
         type,
         date
       }

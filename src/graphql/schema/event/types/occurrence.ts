@@ -1,6 +1,6 @@
 import { objectType } from 'nexus'
 
-import { GetAvailableSlotsUseCase } from '../../../../modules/event/use-cases/get-available-slots/GetAvailableSlotsUseCase'
+import { GetAvailableSlotsUseCase } from '../../../../modules/space/useCases/eventInstance/getAvailableSlots/GetAvailableSlotsUseCase'
 import { PrismaEventInstanceRepository } from '../../../../modules/ticket/repos/implementations/PrismaEventInstanceRepository'
 import { Context } from '../../../../shared/infra/graphql/setupGraphql'
 import { EventTypeEnumNexus } from './event'
@@ -25,6 +25,9 @@ export const OccurenceType = objectType({
         })
       }
     })
+    t.nonNull.boolean('isParentEvent')
+    t.nonNull.boolean('isCanceled')
+    t.nonNull.boolean('isRescheduled')
     t.nonNull.field('type', { type: EventTypeEnumNexus })
     t.nonNull.field('date', { type: 'DateTime' })
     t.boolean('active')

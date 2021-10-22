@@ -9,6 +9,9 @@ export interface DomainOccurrence {
   slots: number
   type: EventTypeEnum
   active: boolean
+  isParentEvent: boolean
+  isCanceled: boolean
+  isRescheduled: boolean
   date: string
   createdAt: Date;
   updatedAt: Date;

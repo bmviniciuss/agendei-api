@@ -128,6 +128,9 @@ export interface NexusGenObjects {
     description?: string | null; // String
     duration?: number | null; // Float
     id: string; // ID!
+    isCanceled: boolean; // Boolean!
+    isParentEvent: boolean; // Boolean!
+    isRescheduled: boolean; // Boolean!
     parentId: string; // ID!
     slots?: number | null; // Int
     title?: string | null; // String
@@ -229,6 +232,9 @@ export interface NexusGenFieldTypes {
     description: string | null; // String
     duration: number | null; // Float
     id: string; // ID!
+    isCanceled: boolean; // Boolean!
+    isParentEvent: boolean; // Boolean!
+    isRescheduled: boolean; // Boolean!
     parentId: string; // ID!
     slots: number | null; // Int
     title: string | null; // String
@@ -329,6 +335,9 @@ export interface NexusGenFieldTypeNames {
     description: 'String'
     duration: 'Float'
     id: 'ID'
+    isCanceled: 'Boolean'
+    isParentEvent: 'Boolean'
+    isRescheduled: 'Boolean'
     parentId: 'ID'
     slots: 'Int'
     title: 'String'

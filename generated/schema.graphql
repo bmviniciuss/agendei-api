@@ -123,6 +123,9 @@ type Occurrence {
   description: String
   duration: Float
   id: ID!
+  isCanceled: Boolean!
+  isParentEvent: Boolean!
+  isRescheduled: Boolean!
   parentId: ID!
   slots: Int
   title: String
