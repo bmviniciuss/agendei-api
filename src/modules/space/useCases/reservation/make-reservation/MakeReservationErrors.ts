@@ -15,7 +15,7 @@ export namespace MakeReservationErrors {
 
   export class UserSpaceTicketsLimitError extends Error {
     constructor () {
-      super('Usuário atingiu o limite de tickets do espaço')
+      super('Usuário atingiu a regra limite de tickets do espaço')
       this.name = 'UserSpaceTicketsLimitError'
     }
   }
