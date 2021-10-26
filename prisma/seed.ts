@@ -63,7 +63,7 @@ async function main () {
           title: 'Evento 1',
           description: '',
           duration: 1,
-          type: EventTypeEnum.BOOKED,
+          type: EventTypeEnum.EVENT,
           slots: 40
         }
       }
