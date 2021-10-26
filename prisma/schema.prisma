@@ -71,7 +71,6 @@ model Event {
   active          Boolean         @default(true)
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
-  eventsBooked    EventBooked[]
   eventsInstances EventInstance[]
 }
 
@@ -86,7 +85,6 @@ model EventDetails {
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   event         Event?
-  eventsBooked  EventBooked[]
   eventInstance EventInstance?
 }
 
@@ -96,20 +94,6 @@ enum EventTypeEnum {
   BOOKED
   CANCELED
   EXCEPTION
-}
-
-model EventBooked {
-  id             String       @id @default(uuid())
-  parent         Event        @relation(fields: [parentId], references: [id])
-  parentId       String
-  eventDetails   EventDetails @relation(fields: [eventDetailsId], references: [id])
-  eventDetailsId String
-  date           DateTime
-  active         Boolean      @default(true)
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-
-  @@unique([parentId, date])
 }
 
 model EventInstance {
@@ -127,7 +111,6 @@ model EventInstance {
   active          Boolean              @default(true)
   createdAt       DateTime             @default(now())
   updatedAt       DateTime             @updatedAt
-
   @@unique([parentId, date])
 }
 
