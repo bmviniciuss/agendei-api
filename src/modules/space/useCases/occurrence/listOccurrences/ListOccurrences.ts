@@ -4,7 +4,7 @@ import { omit, orderBy } from 'lodash'
 import { RRuleSet, rrulestr } from 'rrule'
 
 import { UseCase } from '../../../../../shared/core/UseCase'
-import { TimeRange, EventWithDetails, EventBookedWithDetails, EventInstanceWithEventDetails } from '../../../../../types'
+import { TimeRange, EventWithDetails, EventInstanceWithEventDetails } from '../../../../../types'
 import { DomainEventWithEventsInstaces } from '../../../domain/EventWithInstance'
 import { DomainOccurrence } from '../../../domain/Occurrence'
 import { IEventRepository } from '../../../repos/IEventRepository'
@@ -83,7 +83,7 @@ export class ListOccurrences implements UseCase<ListOccurrencesDTO, DomainOccurr
     })
   }
 
-  private _mapEventDetails (e: EventWithDetails | EventBookedWithDetails | EventInstanceWithEventDetails) {
+  private _mapEventDetails (e: EventWithDetails | EventInstanceWithEventDetails) {
     return {
       ...omit(e.eventDetails, 'id', 'type')
     }

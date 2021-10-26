@@ -2,7 +2,7 @@ import { UseCase } from '../../../../shared/core/UseCase'
 import { LogoutUserRepository } from '../../repos/UserRepository'
 import { LogoutUserDTO } from './LogoutUserDTO'
 
-export type LogoutUserUseCaseResult = Boolean
+export type LogoutUserUseCaseResult = boolean
 
 export class LogoutUserUseCase implements UseCase<LogoutUserDTO, LogoutUserUseCaseResult> {
   constructor (
