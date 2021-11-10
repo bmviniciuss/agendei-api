@@ -97,14 +97,6 @@ export interface NexusGenObjects {
     rule: string; // String!
     updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
   }
-  EventBooked: { // root type
-    active?: boolean | null; // Boolean
-    createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
-    date: NexusGenScalars['DateTime']; // DateTime!
-    eventDetails?: NexusGenRootTypes['EventDetails'] | null; // EventDetails
-    id: string; // ID!
-    updatedAt?: NexusGenScalars['DateTime'] | null; // DateTime
-  }
   EventDetails: { // root type
     active?: boolean | null; // Boolean
     createdAt?: NexusGenScalars['DateTime'] | null; // DateTime
@@ -201,14 +193,6 @@ export interface NexusGenFieldTypes {
     rule: string; // String!
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
   }
-  EventBooked: { // field return type
-    active: boolean | null; // Boolean
-    createdAt: NexusGenScalars['DateTime'] | null; // DateTime
-    date: NexusGenScalars['DateTime']; // DateTime!
-    eventDetails: NexusGenRootTypes['EventDetails'] | null; // EventDetails
-    id: string; // ID!
-    updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
-  }
   EventDetails: { // field return type
     active: boolean | null; // Boolean
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
@@ -265,6 +249,7 @@ export interface NexusGenFieldTypes {
     GetSpaceEvents: NexusGenRootTypes['Event'][] | null; // [Event!]
     GetSpaces: NexusGenRootTypes['Space'][] | null; // [Space!]
     GetUserTickets: NexusGenRootTypes['Ticket'][] | null; // [Ticket!]
+    Space: NexusGenRootTypes['Space'] | null; // Space
     me: NexusGenRootTypes['User'] | null; // User
   }
   Space: { // field return type
@@ -275,6 +260,7 @@ export interface NexusGenFieldTypes {
     events: NexusGenRootTypes['Event'][] | null; // [Event!]
     id: string; // ID!
     name: string; // String!
+    occurrences: NexusGenRootTypes['Occurrence'][] | null; // [Occurrence!]
     ruleSet: NexusGenRootTypes['SpaceRuleSet'] | null; // SpaceRuleSet
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
@@ -313,14 +299,6 @@ export interface NexusGenFieldTypeNames {
     eventDetails: 'EventDetails'
     id: 'ID'
     rule: 'String'
-    updatedAt: 'DateTime'
-  }
-  EventBooked: { // field return type name
-    active: 'Boolean'
-    createdAt: 'DateTime'
-    date: 'DateTime'
-    eventDetails: 'EventDetails'
-    id: 'ID'
     updatedAt: 'DateTime'
   }
   EventDetails: { // field return type name
@@ -379,6 +357,7 @@ export interface NexusGenFieldTypeNames {
     GetSpaceEvents: 'Event'
     GetSpaces: 'Space'
     GetUserTickets: 'Ticket'
+    Space: 'Space'
     me: 'User'
   }
   Space: { // field return type name
@@ -389,6 +368,7 @@ export interface NexusGenFieldTypeNames {
     events: 'Event'
     id: 'ID'
     name: 'String'
+    occurrences: 'Occurrence'
     ruleSet: 'SpaceRuleSet'
     updatedAt: 'DateTime'
   }
@@ -444,6 +424,14 @@ export interface NexusGenArgTypes {
     }
     GetSpaceEvents: { // args
       input: NexusGenInputs['GetSpaceEventsInput']; // GetSpaceEventsInput!
+    }
+    Space: { // args
+      spaceId: string; // ID!
+    }
+  }
+  Space: {
+    occurrences: { // args
+      occurrencesInput: NexusGenInputs['GetOccurrencesInput']; // GetOccurrencesInput!
     }
   }
 }

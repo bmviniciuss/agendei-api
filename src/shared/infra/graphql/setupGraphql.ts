@@ -1,8 +1,4 @@
 import { PrismaClient, User } from '@prisma/client'
-import {
-  ApolloServerPluginLandingPageGraphQLPlayground,
-  ApolloServerPluginLandingPageDisabled
-} from 'apollo-server-core'
 import { ApolloServer, ExpressContext } from 'apollo-server-express'
 import { Express } from 'express'
 import { applyMiddleware } from 'graphql-middleware'
@@ -35,12 +31,7 @@ export async function setupGraphql (app: Express, prisma: PrismaClient) {
   const shieldedSchema = applyMiddleware(schema, shields)
   const apolloServer = new ApolloServer({
     schema: shieldedSchema,
-    context: (expressContext) => getContext(expressContext, prisma),
-    plugins: [
-      process.env.NODE_ENV === 'production'
-        ? ApolloServerPluginLandingPageDisabled()
-        : ApolloServerPluginLandingPageGraphQLPlayground()
-    ]
+    context: (expressContext) => getContext(expressContext, prisma)
   })
   await apolloServer.start()
   apolloServer.applyMiddleware({ app })

@@ -1,7 +1,9 @@
 import { objectType, list, nonNull } from 'nexus'
 
+import { PrismaEventRepository } from '../../../../modules/space/repos/implementations/PrismaEventRepository'
+import { ListOccurrences } from '../../../../modules/space/useCases/occurrence/listOccurrences/ListOccurrences'
 import { Context } from '../../../../shared/infra/graphql/setupGraphql'
-import { EventNexus } from '../../event/types/event'
+import { GetOccurrencesInput, OccurenceType, EventNexus } from '../../event'
 import { SpaceRuleSetNexus } from './rule-set'
 
 export const SpaceNexus = objectType({
@@ -30,6 +32,24 @@ export const SpaceNexus = objectType({
             space: {
               id: root.id
             }
+          }
+        })
+      }
+    })
+    t.field('occurrences', {
+      description: 'Get space events occurrences',
+      args: {
+        occurrencesInput: nonNull(GetOccurrencesInput)
+      },
+      type: list(nonNull(OccurenceType)),
+      async resolve ({ id }, { occurrencesInput }, { prisma }:Context) {
+        const eventRepository = new PrismaEventRepository(prisma)
+        const useCase = new ListOccurrences(eventRepository)
+        return useCase.execute({
+          spaceIds: [id],
+          dateRange: {
+            startTime: occurrencesInput.startTime,
+            endTime: occurrencesInput.endTime
           }
         })
       }
