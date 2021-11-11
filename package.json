@@ -4,6 +4,8 @@
   "description": "Agendei api",
   "main": "index.js",
   "scripts": {
+    "build": "prisma generate && tsc",
+    "start": "node dist/src/index.js",
     "dev": "ts-node-dev --respawn src/index.ts",
     "seed:run": "ts-node seed/index.ts",
     "prisma": "prisma"
