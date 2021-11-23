@@ -21,5 +21,9 @@ export const shields = shield({
   },
   Occurrence: {
     '*': isAuthenticated
+  },
+  Space: {
+    '*': isAuthenticated,
+    tickets: authenticatedAdminShield
   }
 }, { debug: DEBUG_ENABLED, allowExternalErrors: true })

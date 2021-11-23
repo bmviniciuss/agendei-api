@@ -1,4 +1,5 @@
 import { objectType, list, nonNull } from 'nexus'
+import { resolve } from 'path/posix'
 
 import { PrismaEventRepository } from '../../../../modules/space/repos/implementations/PrismaEventRepository'
 import { ListOccurrences } from '../../../../modules/space/useCases/occurrence/listOccurrences/ListOccurrences'
@@ -50,6 +51,26 @@ export const SpaceNexus = objectType({
           dateRange: {
             startTime: occurrencesInput.startTime,
             endTime: occurrencesInput.endTime
+          }
+        })
+      }
+    })
+    t.list.nonNull.field('tickets', {
+      type: 'Ticket',
+      async resolve ({ id }, _args, { prisma }: Context) {
+        return prisma.ticket.findMany({
+          where: {
+            eventInstance: {
+              parent: {
+                space: {
+                  id: id
+                }
+              }
+            }
+          },
+          take: 10,
+          orderBy: {
+            createdAt: 'desc'
           }
         })
       }

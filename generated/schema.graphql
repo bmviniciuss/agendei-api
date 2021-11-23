@@ -181,6 +181,7 @@ type Space {
   """Get space events occurrences"""
   occurrences(occurrencesInput: GetOccurrencesInput!): [Occurrence!]
   ruleSet: SpaceRuleSet
+  tickets: [Ticket!]
   updatedAt: DateTime!
 }
 
@@ -200,7 +201,7 @@ type Ticket {
   id: ID!
   status: TicketStatus!
   updatedAt: DateTime!
-  user: User
+  user: User!
 }
 
 enum TicketStatus {

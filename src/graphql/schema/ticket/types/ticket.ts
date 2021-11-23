@@ -17,7 +17,7 @@ export const TicketNexus = objectType({
     t.nonNull.id('id')
     t.nonNull.field('status', { type: TicketStatusNexusEnum })
     t.nonNull.boolean('active')
-    t.field('user', {
+    t.nonNull.field('user', {
       type: UserNexus,
       resolve (root, _args, { prisma }: Context) {
         return prisma.ticket.findFirst({

@@ -262,6 +262,7 @@ export interface NexusGenFieldTypes {
     name: string; // String!
     occurrences: NexusGenRootTypes['Occurrence'][] | null; // [Occurrence!]
     ruleSet: NexusGenRootTypes['SpaceRuleSet'] | null; // SpaceRuleSet
+    tickets: NexusGenRootTypes['Ticket'][] | null; // [Ticket!]
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   }
   SpaceRuleSet: { // field return type
@@ -279,7 +280,7 @@ export interface NexusGenFieldTypes {
     id: string; // ID!
     status: NexusGenEnums['TicketStatus']; // TicketStatus!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
-    user: NexusGenRootTypes['User'] | null; // User
+    user: NexusGenRootTypes['User']; // User!
   }
   User: { // field return type
     active: boolean; // Boolean!
@@ -370,6 +371,7 @@ export interface NexusGenFieldTypeNames {
     name: 'String'
     occurrences: 'Occurrence'
     ruleSet: 'SpaceRuleSet'
+    tickets: 'Ticket'
     updatedAt: 'DateTime'
   }
   SpaceRuleSet: { // field return type name
