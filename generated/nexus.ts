@@ -435,6 +435,9 @@ export interface NexusGenArgTypes {
     occurrences: { // args
       occurrencesInput: NexusGenInputs['GetOccurrencesInput']; // GetOccurrencesInput!
     }
+    tickets: { // args
+      take?: number | null; // Int
+    }
   }
 }
 

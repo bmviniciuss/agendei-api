@@ -181,7 +181,7 @@ type Space {
   """Get space events occurrences"""
   occurrences(occurrencesInput: GetOccurrencesInput!): [Occurrence!]
   ruleSet: SpaceRuleSet
-  tickets: [Ticket!]
+  tickets(take: Int): [Ticket!]
   updatedAt: DateTime!
 }
 

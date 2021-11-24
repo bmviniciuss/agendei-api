@@ -1,4 +1,4 @@
-import { objectType, list, nonNull } from 'nexus'
+import { objectType, list, nonNull, arg, intArg } from 'nexus'
 import { resolve } from 'path/posix'
 
 import { PrismaEventRepository } from '../../../../modules/space/repos/implementations/PrismaEventRepository'
@@ -57,7 +57,10 @@ export const SpaceNexus = objectType({
     })
     t.list.nonNull.field('tickets', {
       type: 'Ticket',
-      async resolve ({ id }, _args, { prisma }: Context) {
+      args: {
+        take: intArg()
+      },
+      async resolve ({ id }, args, { prisma }: Context) {
         return prisma.ticket.findMany({
           where: {
             eventInstance: {
@@ -68,7 +71,7 @@ export const SpaceNexus = objectType({
               }
             }
           },
-          take: 10,
+          take: args?.take ?? undefined,
           orderBy: {
             createdAt: 'desc'
           }
