@@ -31,7 +31,8 @@ export async function setupGraphql (app: Express, prisma: PrismaClient) {
   const shieldedSchema = applyMiddleware(schema, shields)
   const apolloServer = new ApolloServer({
     schema: shieldedSchema,
-    context: (expressContext) => getContext(expressContext, prisma)
+    context: (expressContext) => getContext(expressContext, prisma),
+    introspection: true
   })
   await apolloServer.start()
   apolloServer.applyMiddleware({ app })
