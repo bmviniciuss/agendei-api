@@ -1,7 +1,7 @@
 export namespace RegisterUserErrors {
   export class EmailInUseError extends Error {
     constructor () {
-      super('The received email is already in use.')
+      super('O email já está em uso')
       this.name = 'EmailInUseError'
     }
   }
