@@ -1,7 +1,7 @@
 export namespace LoginUserErrors {
   export class EmailOrPasswordInvalidError extends Error {
     constructor () {
-      super('Email or password is invalid.')
+      super('Email ou senha inválido')
       this.name = 'EmailOrPasswordInvalidError'
     }
   }
