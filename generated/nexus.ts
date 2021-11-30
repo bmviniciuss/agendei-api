@@ -28,6 +28,9 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  CancelTicketInput: { // input type
+    ticketId: string; // ID!
+  }
   CreateEventInput: { // input type
     eventDetails: NexusGenInputs['CreateEvent_EventDetailsInput']; // CreateEvent_EventDetailsInput!
     rule: string; // String!
@@ -220,6 +223,7 @@ export interface NexusGenFieldTypes {
     user: NexusGenRootTypes['User']; // User!
   }
   Mutation: { // field return type
+    CancelTicket: NexusGenRootTypes['Ticket'] | null; // Ticket
     CreateEvent: NexusGenRootTypes['Event'] | null; // Event
     CreateSpace: NexusGenRootTypes['Space'] | null; // Space
     LoginUser: NexusGenRootTypes['LoginUserResult'] | null; // LoginUserResult
@@ -229,13 +233,14 @@ export interface NexusGenFieldTypes {
   }
   Occurrence: { // field return type
     active: boolean | null; // Boolean
-    availableSlots: number | null; // Int
+    availableSlots: number; // Int!
     createdAt: NexusGenScalars['DateTime'] | null; // DateTime
     date: NexusGenScalars['DateTime']; // DateTime!
     description: string | null; // String
     duration: number | null; // Float
     id: string; // ID!
     isCanceled: boolean; // Boolean!
+    isFull: boolean | null; // Boolean
     isParentEvent: boolean; // Boolean!
     isRescheduled: boolean; // Boolean!
     parentId: string; // ID!
@@ -243,6 +248,8 @@ export interface NexusGenFieldTypes {
     title: string | null; // String
     type: NexusGenEnums['EventTypeEnum']; // EventTypeEnum!
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
+    userHasActiveReservedTicket: boolean | null; // Boolean
+    userReservedTickets: Array<NexusGenRootTypes['Ticket'] | null>; // [Ticket]!
   }
   Query: { // field return type
     GetOccurences: NexusGenRootTypes['Occurrence'][] | null; // [Occurrence!]
@@ -329,6 +336,7 @@ export interface NexusGenFieldTypeNames {
     user: 'User'
   }
   Mutation: { // field return type name
+    CancelTicket: 'Ticket'
     CreateEvent: 'Event'
     CreateSpace: 'Space'
     LoginUser: 'LoginUserResult'
@@ -345,6 +353,7 @@ export interface NexusGenFieldTypeNames {
     duration: 'Float'
     id: 'ID'
     isCanceled: 'Boolean'
+    isFull: 'Boolean'
     isParentEvent: 'Boolean'
     isRescheduled: 'Boolean'
     parentId: 'ID'
@@ -352,6 +361,8 @@ export interface NexusGenFieldTypeNames {
     title: 'String'
     type: 'EventTypeEnum'
     updatedAt: 'DateTime'
+    userHasActiveReservedTicket: 'Boolean'
+    userReservedTickets: 'Ticket'
   }
   Query: { // field return type name
     GetOccurences: 'Occurrence'
@@ -404,6 +415,9 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    CancelTicket: { // args
+      input: NexusGenInputs['CancelTicketInput']; // CancelTicketInput!
+    }
     CreateEvent: { // args
       input: NexusGenInputs['CreateEventInput']; // CreateEventInput!
     }

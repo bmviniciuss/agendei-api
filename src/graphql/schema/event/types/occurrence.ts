@@ -14,37 +14,89 @@ export const OccurenceType = objectType({
     t.string('description')
     t.float('duration')
     t.nonNull.int('slots')
-    t.int('availableSlots', {
+    t.nonNull.int('availableSlots', {
       async resolve (root, _args, { prisma }: Context) {
+        if (root.isCanceled) return 0
+
         if (root.isParentEvent) {
           return root.slots || 0
-        } else {
-          if (root.isCanceled) return 0
-          const eventInstance = await prisma.eventInstance.findUnique({
-            where: {
+        }
+
+        const ticketsCount = await prisma.ticket.count({
+          where: {
+            eventInstance: {
               id: root.id
             },
-            include: {
-              eventDetails: {
-                select: {
-                  slots: true
-                }
-              },
-              tickets: {
-                where: {
-                  status: {
-                    notIn: [TicketStatus.CANCELED]
-                  }
-                }
-              }
+            status: {
+              notIn: [TicketStatus.CANCELED]
             }
-          })
-          if (!!eventInstance?.tickets.length && eventInstance?.eventDetails?.slots) {
-            const { tickets, eventDetails } = eventInstance
-            return eventDetails.slots - tickets.length
           }
-          return 0
-        }
+        })
+
+        return root.slots - ticketsCount
+      }
+    })
+    t.boolean('isFull', {
+      async resolve (root, _args, { prisma }:Context) {
+        if (root.isParentEvent) return false
+        if (root.isCanceled) return false
+        const tickets = await prisma.ticket.count({
+          where: {
+            eventInstance: {
+              id: root.id
+            },
+            status: {
+              notIn: [TicketStatus.CANCELED]
+            }
+          }
+        })
+        return tickets === root.slots
+      }
+    })
+    t.boolean('userHasActiveReservedTicket', {
+      async resolve (root, _args, { prisma, currentUser }:Context) {
+        if (root.isParentEvent) return false
+        if (root.isCanceled) return false
+        if (root.isRescheduled) return false
+
+        const ticket = await prisma.ticket.findFirst({
+          where: {
+            user: {
+              id: currentUser!.id
+            },
+            eventInstance: {
+              date: {
+                equals: root.date
+              }
+            },
+            active: true,
+            status: TicketStatus.RESERVED
+          }
+        })
+        if (!ticket) return false
+        return true
+      }
+    })
+    t.nonNull.list.field('userReservedTickets', {
+      type: 'Ticket',
+      async resolve (root, _args, { currentUser, prisma }: Context) {
+        if (root.isParentEvent) return []
+        if (root.isCanceled) return []
+        if (root.isRescheduled) return []
+
+        return await prisma.ticket.findMany({
+          where: {
+            status: {
+              equals: 'RESERVED'
+            },
+            eventInstance: {
+              id: root.id
+            },
+            user: {
+              id: currentUser?.id
+            }
+          }
+        })
       }
     })
     t.nonNull.boolean('isParentEvent')

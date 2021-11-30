@@ -2,6 +2,10 @@
 ### Do not make changes to this file directly
 
 
+input CancelTicketInput {
+  ticketId: ID!
+}
+
 input CreateEventInput {
   eventDetails: CreateEvent_EventDetailsInput!
   rule: String!
@@ -99,6 +103,9 @@ input MakeReservationInput {
 }
 
 type Mutation {
+  """Allows a CLIENT cancel a RESERVED Ticket"""
+  CancelTicket(input: CancelTicketInput!): Ticket
+
   """Allows a ADMIN to create a event for a space"""
   CreateEvent(input: CreateEventInput!): Event
 
@@ -120,13 +127,14 @@ type Mutation {
 
 type Occurrence {
   active: Boolean
-  availableSlots: Int
+  availableSlots: Int!
   createdAt: DateTime
   date: DateTime!
   description: String
   duration: Float
   id: ID!
   isCanceled: Boolean!
+  isFull: Boolean
   isParentEvent: Boolean!
   isRescheduled: Boolean!
   parentId: ID!
@@ -134,6 +142,8 @@ type Occurrence {
   title: String
   type: EventTypeEnum!
   updatedAt: DateTime
+  userHasActiveReservedTicket: Boolean
+  userReservedTickets: [Ticket]!
 }
 
 type Query {
