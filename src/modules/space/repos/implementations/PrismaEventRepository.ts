@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 
+import { TimeRange } from '../../../../types'
 import { DomainEvent } from '../../domain/Event'
 import { DomainEventWithEventsInstaces } from '../../domain/EventWithInstance'
 import { DomainSpace } from '../../domain/Space'
@@ -45,7 +46,7 @@ export class PrismaEventRepository implements IEventRepository {
     })
   }
 
-  listSpaceEventsWithInstances (spaceIds?: SpaceId[]): Promise<DomainEventWithEventsInstaces[]> {
+  listSpaceEventsWithInstances (spaceIds?: SpaceId[], dateRangeInput?: TimeRange): Promise<DomainEventWithEventsInstaces[]> {
     const spaceFilter = (() => {
       if (!spaceIds || spaceIds === null) return undefined
       return { id: { in: spaceIds as string[] } }
@@ -59,6 +60,14 @@ export class PrismaEventRepository implements IEventRepository {
       include: {
         eventDetails: true,
         eventsInstances: {
+          where: dateRangeInput
+            ? {
+                date: {
+                  gte: dateRangeInput.startTime,
+                  lte: dateRangeInput.endTime
+                }
+              }
+            : undefined,
           include: {
             eventDetails: true
           }

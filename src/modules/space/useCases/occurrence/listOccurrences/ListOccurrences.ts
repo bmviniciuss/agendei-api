@@ -16,7 +16,7 @@ export class ListOccurrences implements UseCase<ListOccurrencesDTO, DomainOccurr
   ) { }
 
   async execute (data: ListOccurrencesDTO): Promise< DomainOccurrence[]> {
-    const events = await this.eventRepository.listSpaceEventsWithInstances(data.spaceIds)
+    const events = await this.eventRepository.listSpaceEventsWithInstances(data.spaceIds, data.dateRange)
     return this._mountEventsOccurrences(events, data.dateRange)
   }
 
