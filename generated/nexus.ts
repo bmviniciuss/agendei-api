@@ -194,6 +194,7 @@ export interface NexusGenFieldTypes {
     eventDetails: NexusGenRootTypes['EventDetails'] | null; // EventDetails
     id: string; // ID!
     rule: string; // String!
+    space: NexusGenRootTypes['Space'] | null; // Space
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
   }
   EventDetails: { // field return type
@@ -308,6 +309,7 @@ export interface NexusGenFieldTypeNames {
     eventDetails: 'EventDetails'
     id: 'ID'
     rule: 'String'
+    space: 'Space'
     updatedAt: 'DateTime'
   }
   EventDetails: { // field return type name

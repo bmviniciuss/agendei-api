@@ -42,6 +42,7 @@ type Event {
   eventDetails: EventDetails
   id: ID!
   rule: String!
+  space: Space
   updatedAt: DateTime
 }
 

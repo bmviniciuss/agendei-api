@@ -1,6 +1,7 @@
 import { EventTypeEnum } from '@prisma/client'
 import { isPast } from 'date-fns'
 import { enumType, objectType } from 'nexus'
+import { resolve } from 'path/posix'
 
 import { Context } from '../../../../shared/infra/graphql/setupGraphql'
 
@@ -40,6 +41,19 @@ export const EventNexus = objectType({
         })
         if (!event?.eventDetails) return null
         return event.eventDetails
+      }
+    })
+    t.field('space', {
+      type: 'Space',
+      async resolve (root, _args, { prisma }: Context) {
+        const event = await prisma.event.findUnique({
+          where: { id: root.id },
+          include: {
+            space: true
+          }
+        })
+        if (!event?.space) return null
+        return event.space
       }
     })
     t.boolean('active')
