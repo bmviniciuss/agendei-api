@@ -1,5 +1,6 @@
 import { TicketStatus, UserType } from '.prisma/client'
 
+import { isPast } from 'date-fns'
 import { mutationField, inputObjectType, nonNull, arg } from 'nexus'
 
 import { Context } from '../../../../shared/infra/graphql/setupGraphql'
@@ -28,7 +29,12 @@ export const CancelTicketMutation = mutationField('CancelTicket', {
         id: input.ticketId
       },
       include: {
-        user: true
+        user: true,
+        eventInstance: {
+          select: {
+            date: true
+          }
+        }
       }
     })
 
@@ -38,6 +44,8 @@ export const CancelTicketMutation = mutationField('CancelTicket', {
     if (currentUser.type === UserType.CLIENT) {
       if (ticket.user.id !== currentUser.id) throw new Error('Você não tem autorização para realizar esse cancelamento.')
     }
+
+    if (isPast(ticket.eventInstance.date)) throw new Error('Não é possivel realizar o cancelamento de um ticket do passado.')
 
     return prisma.ticket.update({
       where: {

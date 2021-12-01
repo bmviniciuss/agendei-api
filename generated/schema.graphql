@@ -64,6 +64,7 @@ type EventInstance {
   eventDetails: EventDetails
   id: ID!
   isCanceled: Boolean
+  isPastDate: Boolean
   isRescheduled: Boolean
   parent: Event
   updatedAt: DateTime

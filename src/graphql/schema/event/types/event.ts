@@ -1,4 +1,5 @@
 import { EventTypeEnum } from '@prisma/client'
+import { isPast } from 'date-fns'
 import { enumType, objectType } from 'nexus'
 
 import { Context } from '../../../../shared/infra/graphql/setupGraphql'
@@ -52,6 +53,12 @@ export const EventInstanceNexus = objectType({
   definition (t) {
     t.nonNull.id('id')
     t.nonNull.field('date', { type: 'DateTime' })
+    t.boolean('isPastDate', {
+      resolve (root, _args) {
+        if (!root.date) return false
+        return isPast(root.date)
+      }
+    })
     t.field('parent', {
       type: EventNexus,
       async resolve (root, _args, { prisma }:Context) {

@@ -214,6 +214,7 @@ export interface NexusGenFieldTypes {
     eventDetails: NexusGenRootTypes['EventDetails'] | null; // EventDetails
     id: string; // ID!
     isCanceled: boolean | null; // Boolean
+    isPastDate: boolean | null; // Boolean
     isRescheduled: boolean | null; // Boolean
     parent: NexusGenRootTypes['Event'] | null; // Event
     updatedAt: NexusGenScalars['DateTime'] | null; // DateTime
@@ -327,6 +328,7 @@ export interface NexusGenFieldTypeNames {
     eventDetails: 'EventDetails'
     id: 'ID'
     isCanceled: 'Boolean'
+    isPastDate: 'Boolean'
     isRescheduled: 'Boolean'
     parent: 'Event'
     updatedAt: 'DateTime'
