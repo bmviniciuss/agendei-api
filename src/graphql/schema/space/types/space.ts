@@ -44,20 +44,12 @@ export const SpaceNexus = objectType({
       },
       type: list(nonNull(OccurenceType)),
       async resolve ({ id }, { occurrencesInput }, { prisma }:Context) {
-        const dateRange = (() => {
-          const { startTime, endTime } = occurrencesInput
-          if (isSameDay(startTime, endTime)) {
-            return { startTime: startOfDay(startTime), endTime: endOfDay(endTime) }
-          }
-          return { startTime, endTime }
-        })()
-
         const eventRepository = new PrismaEventRepository(prisma)
         const useCase = new ListOccurrences(eventRepository)
 
         return useCase.execute({
           spaceIds: [id],
-          dateRange
+          dateRange: occurrencesInput
         })
       }
     })
