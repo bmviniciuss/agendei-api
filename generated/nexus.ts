@@ -257,6 +257,7 @@ export interface NexusGenFieldTypes {
     GetOccurences: NexusGenRootTypes['Occurrence'][] | null; // [Occurrence!]
     GetSpaceEvents: NexusGenRootTypes['Event'][] | null; // [Event!]
     GetSpaces: NexusGenRootTypes['Space'][] | null; // [Space!]
+    GetTicketById: NexusGenRootTypes['Ticket'] | null; // Ticket
     GetUserTickets: NexusGenRootTypes['Ticket'][] | null; // [Ticket!]
     Space: NexusGenRootTypes['Space'] | null; // Space
     me: NexusGenRootTypes['User'] | null; // User
@@ -372,6 +373,7 @@ export interface NexusGenFieldTypeNames {
     GetOccurences: 'Occurrence'
     GetSpaceEvents: 'Event'
     GetSpaces: 'Space'
+    GetTicketById: 'Ticket'
     GetUserTickets: 'Ticket'
     Space: 'Space'
     me: 'User'
@@ -444,6 +446,9 @@ export interface NexusGenArgTypes {
     }
     GetSpaceEvents: { // args
       input: NexusGenInputs['GetSpaceEventsInput']; // GetSpaceEventsInput!
+    }
+    GetTicketById: { // args
+      ticketId: string; // ID!
     }
     Space: { // args
       spaceId: string; // ID!

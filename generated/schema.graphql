@@ -158,6 +158,9 @@ type Query {
   """Get all spaces"""
   GetSpaces: [Space!]
 
+  """Get a ticket by id"""
+  GetTicketById(ticketId: ID!): Ticket
+
   """Get current user's tickets"""
   GetUserTickets: [Ticket!]
 
