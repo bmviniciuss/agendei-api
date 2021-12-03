@@ -33,6 +33,9 @@ export const SpaceNexus = objectType({
             space: {
               id: root.id
             }
+          },
+          orderBy: {
+            createdAt: 'desc'
           }
         })
       }
